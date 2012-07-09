@@ -1,0 +1,4 @@
+# Binary files
+*.a
+*.o
+*.so

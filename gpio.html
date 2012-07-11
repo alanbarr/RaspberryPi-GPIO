@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Raspberry Pi GPIO Library: Main Page</title>
+<title>Raspberry Pi GPIO Library: GPIO</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -46,8 +46,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
@@ -71,50 +71,34 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">Raspberry Pi GPIO Library Documentation</div>  </div>
+<div class="title">GPIO </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The library provided here allows basic input / output control over the GPIO pins of a Raspberry Pi from C. The pins are accessed from memory mapped pointer to /dev/mem (see man mmap). </p>
-<h2><a class="anchor" id="getting_started"></a>
-Getting Started</h2>
-<h3><a class="anchor" id="getting_started_build"></a>
-Building the library: libRpiGpio.a</h3>
-<p>To build the library file change directory to src (assuming you are at the top level directory of RaspberryPi-GPIO) type "make" in the terminal:</p>
-<p><code></p>
+<div class="textblock"><h2><a class="anchor" id="gpio_pins"></a>
+GPIO Pins</h2>
+<dl class="attention"><dt><b>Attention:</b></dt><dd>Take care when wiring up any GPIO pin. Doing so incorrectly could potentially do damage for instance shorting out a positive rail and ground.</dd></dl>
+<h3><a class="anchor" id="gpio_pins_layout"></a>
+Layout</h3>
+<p>Pin 1 should be labeled such on the PCB and should also be the closest pin to the SD card. </p>
 <pre>
-    cd src
-    make
-</pre><p></code></p>
-<p>If this command was successful you should see a new directory called library now exists at the root level. libRpiGpio.a should be found in this directory; library/libRpiGpio.a.</p>
-<h3><a class="anchor" id="getting_started_examples"></a>
-Examples</h3>
-<p>There is example code provided in the directory examples. To compile this code change directory to examples and type "make".</p>
-<p><code></p>
-<pre>
-    cd examples
-    make
-</pre><p></code></p>
-<p>You should see a new folder - called output - is created in examples. The example binaries can be found within this folder - examples/output/.</p>
-<p>To execute one of the examples you must first give it execute permissions. <code></p>
-<pre>
-    chmod +x output/&lt;file_name&gt;
-</pre><p></code></p>
-<p>The examples should be run as root.</p>
-<p><code></p>
-<pre>
-    sudo ./output/&lt;file_name&gt;
-</pre><p></code></p>
-<h2><a class="anchor" id="ack"></a>
-Acknowledgements</h2>
-<p>Some of the code was based upon an example by Dom and Gert which was found at: <a href="http://elinux.org/RPi_Low-level_peripherals#Introduction">http://elinux.org/RPi_Low-level_peripherals#Introduction</a>. </p>
-<h2><a class="anchor" id="copy"></a>
-Copyright</h2>
-<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see &lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
-<h2><a class="anchor" id="refs"></a>
-References</h2>
-<p>elinux Wiki on Raspberry Pi GPIO: <a href="http://elinux.org/RPi_Low-level_peripherals#Introduction">http://elinux.org/RPi_Low-level_peripherals#Introduction</a> <br/>
- Raspberry Pi blog post on GPIO: <a href="http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/">http://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/</a> <br/>
- Datasheet: <a href="http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf">http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf</a> </p>
+           _______
+  3V3    |  1  2 | 5V         
+  GPIO00 |  3  4 | DNC        
+  GPIO01 |  5  6 | GND
+  GPIO04 |  7  8 | GPIO14
+  DNC    |  9 10 | GPIO15
+  GPIO17 | 11 12 | GPIO18
+  GPIO21 | 13 14 | DNC
+  GPIO22 | 15 16 | GPIO23
+  DNC    | 17 18 | GPIO24
+  GPIO10 | 19 20 | DNC
+  GPIO09 | 21 22 | GPIO25
+  GPIO11 | 23 24 | GPIO08
+  DNC    | 25 26 | GPIO07
+          _______
+  </pre><h3><a class="anchor" id="gpio_pins_numbering"></a>
+Numbering</h3>
+<p>All references to GPIO pin numbering is this code refers to the pin number as it is on the BCM2835 chip, i.e. in the diagram above GPIOxx. This is notably different from the physical pin layout on the Raspberry Pi. </p>
 </div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"

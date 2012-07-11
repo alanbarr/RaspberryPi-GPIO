@@ -1,0 +1,75 @@
+/**
+@page advice Advice on Use    
+
+@section advice_include Including the Library
+
+To use this library you must:
+
+@par Correctly Include the Header File
+    The header file rpiGpio.h must be included in whatever source files use a GPIO
+    function i.e. \#include "rpiGpio.h". You will also need to ensure that your 
+    compiler can find this header file. In GCC you can include the path
+    to the directory the header resides with -I\<dir\>. E.g.
+<code><pre>
+        gcc -I/path/to/RaspberryPi-GPIO-C/include/ -o \<outputfile\> \
+                                                      \<input_list\>
+</pre></code>
+
+@par Ensure the library is correctly linked when compiling your source.
+     There are several methods to do this in GCC.
+     You can provide a direct path to the library as if it was another source
+     file.
+<code><pre>
+        gcc -I/path/to/RaspberryPi-GPIO-C/include/ -o \<output_file\> \
+            \<input_files\> 
+            \</path/to/RaspberryPi-GPIO-C/library/libRpiGpio.a\>
+</pre></code>
+    Or you can add the directoy which the library resides to the list of 
+    directories the linker checks for library files. The library path is 
+    specified with -L\<path\>. You then need to tell GCC that you want to use this
+    particular library. This is done with -l\<lib-name\>. The lib_name is name of
+    the library with the preceding "lib" and proceeding ".a" removed. 
+    libRpiGpio.a = RpiGpio
+<code><pre>
+        gcc -I/path/to/RaspberryPi-GPIO-C/include/      \
+            -L/path/to/RaspberryPi-GPIO-C/library       \
+            -o outputfile \<input_file\>                \
+            -lRpiGpio                                   
+</pre></code>
+
+@section advice_using_lib Library Functions
+
+@par Initialisation
+    The first call which could always be made to initialise the library for use is
+    gpioSetup(). It is in this function where the memory mapping of the pointer 
+    to the GPIO peripherals is done. 
+    gpioSetup() need only be called once, and afterwards - if successful - you 
+    may proceed use a pin as an output or an input.
+
+@par Output
+    To configure a GPIO pin as output call gpioSetFunction() with the desired
+    pin number and the function as \p output.
+    You can now change the state of the pin with gpioSetPin(), passing in the
+    desired pin number and either \p high or \p low.
+
+@par Internal Resistor
+    Depending on the configuration you may want to configure an internal 
+    resistor at pin or perhaps disable it. To do this call 
+    gpioSetPullResistor() with the GPIO pin number in question and the desired
+    resistor option. The internal resistor option is useful if you intend on
+    using a switch, for example as you can generally get away without an external
+    resistor. Just connect the switch to a GPIO and either GND / VCC with a 
+    pullup / pulldown resistor configured on the GPIO.
+
+@par Input
+    To configure a GPIO pin as input call gpioSetFunction() with the desired
+    pin number and the function as \p input.
+    You can now read the state of the pin with gpioReadPin(), passing in the
+    desired pin number as well a pointer to a type eState which will
+    hold the current state of the pin after the function returns.
+
+@par Cleanup
+    When finished with the GPIO pins, gpioCleanup() should be called which
+    will unmap the memory used to access the GPIO registers.
+    
+*/

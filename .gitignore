@@ -2,3 +2,6 @@
 *.a
 *.o
 *.so
+*.exe
+
+gh-pages

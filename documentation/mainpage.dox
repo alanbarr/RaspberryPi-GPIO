@@ -44,11 +44,10 @@ The examples should be run as root.
     sudo ./output/\<file_name\>
 </pre></code>
 
-
-
 @section ack Acknowledgements
     Some of the code was based upon an example by Dom and Gert which was found
     at: http://elinux.org/RPi_Low-level_peripherals#Introduction.
+
 @section copy Copyright
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

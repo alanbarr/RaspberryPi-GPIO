@@ -2,7 +2,7 @@
  * @file
  *  @brief Header file for BCM2835 GPIO registers. 
  *
- *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO,
+ *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
  *  Copyright (C) Alan Barr 2012
  *

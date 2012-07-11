@@ -2,7 +2,7 @@
  * @file
  *  @brief The main header file of the GPIO library.
  *
- *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO,
+ *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
  *  Copyright (C) Alan Barr 2012
  *

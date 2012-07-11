@@ -19,5 +19,3 @@ The compiler being used should know where to look for rpiGpio.h as well as the
 library file when linking.
 
 NOTE: Building and execution should be done on the Raspberry Pi itself.
-
-*/

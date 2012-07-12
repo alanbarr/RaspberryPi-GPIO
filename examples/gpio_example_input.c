@@ -34,7 +34,7 @@
 #include "rpiGpio.h"
 
 /* The pin to use as an output and toggle */
-#define GPIO_PIN 1
+#define GPIO_PIN 25
 
 int main(void)
 {

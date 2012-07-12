@@ -33,8 +33,8 @@
 /** Number of GPIO pins which are available on the Raspberry Pi. */
 #define NUMBER_GPIO                 17
 
-/** Delay for changing pullup/pulldown resistors. It should be at least150 cycles
- ** which is 0.21 uS (1 / 700 Mhz * 150). */
+/** Delay for changing pullup/pulldown resistors. It should be at least 150 
+ ** cycles which is 0.21 uS (1 / 700 MHz * 150). */
 #define RESISTOR_SLEEP_US           1
 
 /** The list of errors which may be returned from gpio functions. Errors are
@@ -51,38 +51,41 @@
 /** Redefining to replace the macro with x. */
 #define ERROR(x) x,
 
-/** The enum of possible errors returned from gpio functions. */
+/** The enum of possible errors returned from gpio functions. Errors themselves
+ ** are defined in the macro #ERRORS. */
 typedef enum {
     ERRORS
-    ERROR_MAX
+    ERROR_MAX   
 } errStatus;
 
 /** The enum of possible pin states in input/output modes. */
 typedef enum {
-    low  = 0x0,
-    high = 0x1
+    low  = 0x0, /**< Pin low */
+    high = 0x1  /**< Pin high */
 } eState;
 
 /** The enum for possible pull resistors. */
 typedef enum {
-    pullDisable = GPPUD_DISABLE,
-    pulldown    = GPPUD_PULLDOWN,
-    pullup      = GPPUD_PULLUP
+    pullDisable = GPPUD_DISABLE,  /**< No resistor */
+    pulldown    = GPPUD_PULLDOWN, /**< Pulldown resistor */
+    pullup      = GPPUD_PULLUP    /**< Pullup resistor */
 } eResistor;
 
 /** The enum of pin functions available. The enum values are 
- ** equivalent to those in the data sheet. */
+ ** equivalent to those in the data sheet. 
+ ** @note Currently only pins configured for input and output have been 
+ ** tested. */
 typedef enum {
-    input  = GPFSEL_INPUT,
-    output = GPFSEL_OUTPUT,
-    alt0   = GPFSEL_ALT0,                 
-    alt1   = GPFSEL_ALT1,                 
-    alt2   = GPFSEL_ALT2,                 
-    alt3   = GPFSEL_ALT3,                
-    alt4   = GPFSEL_ALT4,                 
-    alt5   = GPFSEL_ALT5,
-    eFunctionMin = GPFSEL_INPUT,
-    eFunctionMax = GPFSEL_ALT3
+    input  = GPFSEL_INPUT,        /**< Set pin to input */
+    output = GPFSEL_OUTPUT,       /**< Set pin to output */ 
+    alt0   = GPFSEL_ALT0,         /**< Set pin to alternative function 0 */
+    alt1   = GPFSEL_ALT1,         /**< Set pin to alternative function 1 */
+    alt2   = GPFSEL_ALT2,         /**< Set pin to alternative function 2 */      
+    alt3   = GPFSEL_ALT3,         /**< Set pin to alternative function 3 */   
+    alt4   = GPFSEL_ALT4,         /**< Set pin to alternative function 4 */     
+    alt5   = GPFSEL_ALT5,         /**< Set pin to alternative function 5 */  
+    eFunctionMin = GPFSEL_INPUT,  /**< Minimum valid value for enum */
+    eFunctionMax = GPFSEL_ALT3    /**< Maximum valid value for enum */
 } eFunction;
 
 

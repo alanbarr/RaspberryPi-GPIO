@@ -57,7 +57,6 @@
  *  notably different from the physical pin layout on the Raspberry Pi.
  */
 
-
 #include "rpiGpio.h"
 #include <stdarg.h>
 #include <stdint.h>
@@ -81,7 +80,7 @@ static volatile uint32_t * gGpioMap = NULL;
 /**
  * @brief   Maps the memory used for GPIO access. This function must be called 
  *          prior to any of the other GPIO calls.
- * @return  Error from errStatus. */
+ * @return  An error from #errStatus. */
 errStatus gpioSetup(void)
 {
     int mem_fd = 0;
@@ -123,7 +122,7 @@ errStatus gpioSetup(void)
 /**
  * @brief   Unmaps the memory used for the gpio pins. This function should be 
  *          called when finished with the GPIO pins.
- * @return  Error from errStatus. */
+ * @return  An error from #errStatus. */
 errStatus gpioCleanup(void)
 {    
     errStatus rtn = ERROR_DEFAULT;
@@ -153,7 +152,7 @@ errStatus gpioCleanup(void)
  * @brief               Sets the functionality of the desired pin.
  * @param gpioNumber    The gpio pin number to change.
  * @param function      The desired functionality for the pin. 
- * @return              Error from errStatus.*/
+ * @return              An error from #errStatus. */
 errStatus gpioSetFunction(int gpioNumber, eFunction function)
 {
     errStatus rtn = ERROR_DEFAULT;
@@ -197,7 +196,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
  *                      gpioSetFunction() prior to this.
  * @param gpioNumber    The pin to set. 
  * @param state         The desired state of the pin.
- * @return              An error from errStatus.*/
+ * @return              An error from #errStatus.*/
 errStatus gpioSetPin(int gpioNumber, eState state)
 { 
     errStatus rtn = ERROR_DEFAULT;
@@ -244,7 +243,7 @@ errStatus gpioSetPin(int gpioNumber, eState state)
  * @param gpioNumber    The number of the GPIO pin to read.
  * @param[out] state    Pointer to the variable in which the GPIO pin state is 
  *                      returned.
- * @return              Error from errStatus. */
+ * @return              An error from #errStatus. */
 errStatus gpioReadPin(int gpioNumber, eState * state)
 { 
     errStatus rtn = ERROR_DEFAULT;
@@ -285,12 +284,12 @@ errStatus gpioReadPin(int gpioNumber, eState * state)
  *                       pullup, pulldown or no resistor at the pin.
  * @param gpioNumber     The GPIO pin to configure.
  * @param resistorOption The available resistor options.
- * @return               An error from errStatus. */
+ * @return               An error from #errStatus. */
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
 {
     errStatus rtn = ERROR_DEFAULT;
     struct timespec sleepTime;
-    dbgPrint(DBG_INFO, "in resistor set with option: %d", resistorOption);
+    
     if (gGpioMap == NULL)
     {
        dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup called successfully.");
@@ -339,7 +338,7 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
 
 /**
  * @brief       Debug function which converts an error from errStatus to a string.
- * @param error Error from errStatus.
+ * @param error Error from #errStatus.
  * @return      String representation of errStatus parameter error. */
 const char * gpioErrToString(errStatus error)
 {
@@ -363,28 +362,48 @@ const char * gpioErrToString(errStatus error)
  *                   to output strings. #DBG_INFO is a macro which is useful
  *                   to call as the "first" parameter to this function. Note 
  *                   this function will add on a newline to the end of a format 
- *                   string.
+ *                   string so one is generally not required in \p format.
  * @param[in] stream Output stream for strings, e.g. stderr, stdout.
  * @param[in] file   Name of file to be printed. Should be retrieved with __FILE__.
  * @param line       Line number to print. Should be retrieved with __LINE__.
  * @param[in] format Formatted string in the format which printf() would accept.
  * @param ...        Additional arguments - to fill in placeholders in parameter
  *                   \p format.
+ * @return           This function uses the printf() family functions and the
+ *                   returned integer is what is returned from these calls: If
+ *                   successful the number or characters printed is returned,
+ *                   if unsuccessful a negative value.
  */
 int dbgPrint(FILE * stream, const char * file, int line, const char * format, ...)
 {
     va_list arguments;
+    int rtn = 0;
+    int tempRtn = 0;
 
     if (stream != NULL)
     {
-        fprintf(stream,"[%s:%d] ", file, line);
-
+        if ((tempRtn = fprintf(stream,"[%s:%d] ", file, line)) < 0)
+        {
+            return tempRtn;
+        }
+        rtn += tempRtn;
+        
         va_start(arguments, format);
-        vfprintf(stream, format, arguments);
+        if ((tempRtn = vfprintf(stream, format, arguments)) < 0)
+        {
+            return tempRtn;
+        }
+        rtn += tempRtn;
         va_end(arguments);
-        fprintf(stream,"\n");
+
+        if ((tempRtn = fprintf(stream,"\n")) < 0)
+        {
+            return tempRtn;
+        }
+        rtn += tempRtn;
+
     }
-    return 0;
+    return rtn;
 }
 
 /****************************** Internal Functions ******************************/ 
@@ -393,7 +412,7 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
  * @brief               Internal function which Validates that the pin 
  *                      \p gpioNumber is valid for the Raspberry Pi.
  * @param gpioNumber    The pin number to check.
- * @return              Error from errStatus. */
+ * @return              An error from #errStatus. */
 static errStatus gpioValidatePin(int gpioNumber)
 {
     errStatus rtn = ERROR_INVALID_PIN_NUMBER;

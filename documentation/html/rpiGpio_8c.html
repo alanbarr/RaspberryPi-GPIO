@@ -148,7 +148,7 @@ Functions</h2></td></tr>
 <div class="memdoc">
 <p>Redefining to replace macro with x as a string, i.e. "x". For use in <a class="el" href="rpiGpio_8c.html#afdd1d6997bb06665961b2e50fe61d403" title="Debug function which converts an error from errStatus to a string.">gpioErrToString()</a> </p>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00338">338</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00337">337</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -197,7 +197,7 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Debug function wrapper for fprintf(). </p>
-<p>Allows file and line information to be added easier to output strings. <a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a> is a macro which is useful to call as the "first" parameter to this function. Note this function will add on a newline to the end of a format string. </p>
+<p>Allows file and line information to be added easier to output strings. <a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a> is a macro which is useful to call as the "first" parameter to this function. Note this function will add on a newline to the end of a format string so one is generally not required in <code>format</code>. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>Output stream for strings, e.g. stderr, stdout. </td></tr>
@@ -208,9 +208,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>This function uses the printf() family functions and the returned integer is what is returned from these calls: If successful the number or characters printed is returned, if unsuccessful a negative value. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a1">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a1">gpio_example_output.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00374">374</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00377">377</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -230,10 +231,10 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO pins. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Error from errStatus. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a6">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a5">gpio_example_output.c</a>.</dd>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a8">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a8">gpio_example_output.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00127">127</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00126">126</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -255,13 +256,13 @@ Functions</h2></td></tr>
 <p>Debug function which converts an error from errStatus to a string. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">error</td><td>Error from errStatus. </td></tr>
+    <tr><td class="paramname">error</td><td>Error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>String representation of errStatus parameter error. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00344">344</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00343">343</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -298,10 +299,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Error from errStatus. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a5">gpio_example_input.c</a>.</dd>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a7">gpio_example_input.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00248">248</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00247">247</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -338,10 +339,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Error from errStatus. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a3">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a3">gpio_example_output.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00157">157</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00156">156</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -379,10 +380,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from errStatus. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_output_8c-example.html#a4">gpio_example_output.c</a>.</dd>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_output_8c-example.html#a5">gpio_example_output.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00201">201</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00200">200</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -420,10 +421,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from errStatus. </dd></dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a4">gpio_example_input.c</a>.</dd>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a5">gpio_example_input.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00289">289</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00288">288</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -443,10 +444,10 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO calls. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Error from errStatus. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a0">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a0">gpio_example_output.c</a>.</dd>
 </dl>
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00085">85</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00084">84</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
 
 </div>
 </div>
@@ -456,7 +457,7 @@ Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -468,7 +469,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 11 2012 17:33:48 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 12 2012 22:29:08 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

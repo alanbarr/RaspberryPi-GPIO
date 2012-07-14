@@ -1,6 +1,6 @@
 /**
  * @file
- *  @brief Contains C source for the library.
+ *  @brief Contains source for the GPIO functionality.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
@@ -59,7 +59,6 @@
 
 #include "rpiGpio.h"
 #include <stdarg.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -69,13 +68,23 @@
 #include <stdio.h>
 #include <time.h>
 
+/** The size the GPIO mapping is required to be. GPPUDCLK1_OFFSET is the last
+ ** register offset of interest. */
+#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET) 
+
+/** Number of GPIO pins which are available on the Raspberry Pi. */
+#define NUMBER_GPIO                 17
+
+/** Delay for changing pullup/pulldown resistors. It should be at least 150 
+ ** cycles which is 0.6 uS (1 / 250 MHz * 150).  (250 Mhz is the core clock)*/
+#define RESISTOR_SLEEP_US           1
+
 /* Local / internal prototypes */
 static errStatus gpioValidatePin(int gpioNumber);
 
 /**** Globals ****/
 /** Pointer which will be mmap'd to the GPIO memory in /dev/mem */
 static volatile uint32_t * gGpioMap = NULL;
-
 
 /**
  * @brief   Maps the memory used for GPIO access. This function must be called 
@@ -92,12 +101,12 @@ errStatus gpioSetup(void)
         rtn = ERROR_EXTERNAL;
     }
  
-    else if ((gGpioMap = (volatile uint32_t *)mmap( NULL,
-                                                    GPIO_MAP_SIZE,
-                                                    PROT_READ|PROT_WRITE,
-                                                    MAP_SHARED,
-                                                    mem_fd,
-                                                    GPIO_BASE)) == MAP_FAILED)
+    else if ((gGpioMap = (volatile uint32_t *)mmap(NULL,
+                                                   GPIO_MAP_SIZE,
+                                                   PROT_READ|PROT_WRITE,
+                                                   MAP_SHARED,
+                                                   mem_fd,
+                                                   GPIO_BASE)) == MAP_FAILED)
     {
         dbgPrint(DBG_INFO,"mmap failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;

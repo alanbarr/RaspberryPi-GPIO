@@ -13,8 +13,8 @@ VPATH= $(OUT_DIR) $(LIB_DIR)
 
 all: dirs $(LIB_NAME)
 
-$(LIB_NAME): rpiGpio.o
-	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(OUT_DIR)/$^
+$(LIB_NAME): rpiGpio.o rpiI2c.o
+	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(OUT_DIR)/rpiGpio.o $(OUT_DIR)/rpiI2c.o
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -o $(OUT_DIR)/$@ -c $<

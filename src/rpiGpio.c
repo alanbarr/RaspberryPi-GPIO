@@ -73,8 +73,19 @@
 static errStatus gpioValidatePin(int gpioNumber);
 
 /**** Globals ****/
-/** Pointer which will be mmap'd to the GPIO memory in /dev/mem */
+/** @brief Pointer which will be mmap'd to the GPIO memory in /dev/mem */
 static volatile uint32_t * gGpioMap = NULL;
+
+/** @brief GPSET_0 register */
+#define GPIO_GPSET0     *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t))
+/** @brief GPIO_GPCLR0 register */
+#define GPIO_GPCLR0     *(gGpioMap + GPCLR0_OFFSET / sizeof(uint32_t))
+/** @brief GPIO_GPLEV0 register */
+#define GPIO_GPLEV0     *(gGpioMap + GPLEV0_OFFSET / sizeof(uint32_t))
+/** @brief GPIO_GPPUD register */
+#define GPIO_GPPUD      *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t))
+/** @brief GPIO_GPPUDCLK0 register */
+#define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))
 
 
 /**
@@ -88,7 +99,7 @@ errStatus gpioSetup(void)
 
     if ((mem_fd = open("/dev/mem", O_RDWR)) < 0) 
     {
-        dbgPrint(DBG_INFO,"Failed to open /dev/mem.");
+        dbgPrint(DBG_INFO, "open() failed. /dev/mem. errno %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
  
@@ -99,14 +110,14 @@ errStatus gpioSetup(void)
                                                     mem_fd,
                                                     GPIO_BASE)) == MAP_FAILED)
     {
-        dbgPrint(DBG_INFO,"mmap failed. errno: %s.", strerror(errno));
+        dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
     
     /* Close the fd, we have now mapped it */
     else if (close(mem_fd) != OK)
     {
-        dbgPrint(DBG_INFO,"close failed. errno: %s.", strerror(errno));
+        dbgPrint(DBG_INFO, "close() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
 
@@ -129,13 +140,13 @@ errStatus gpioCleanup(void)
 
     if (gGpioMap == NULL)
     {
-        dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup was called successfully.");
+        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
         rtn = ERROR_NULL;
     }
 
     else if (munmap((void *)gGpioMap, GPIO_MAP_SIZE) != OK)
     {
-        dbgPrint(DBG_INFO,"mummap failed. errno %s.", strerror(errno));
+        dbgPrint(DBG_INFO, "mummap() failed. errno %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
     
@@ -159,19 +170,19 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
 
     if (gGpioMap == NULL)
     {
-        dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup called successfully.");
+        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() called successfully.");
         rtn = ERROR_NULL;
     }
 
     else if (function < eFunctionMin || function > eFunctionMax)
     {
-        dbgPrint(DBG_INFO,"eFunction was out of range. %d", function);
+        dbgPrint(DBG_INFO, "eFunction was out of range. %d", function);
         rtn = ERROR_RANGE;
     }
     
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
-        dbgPrint(DBG_INFO,"gpioValidatePin failed. Ensure pin %d is valid.", gpioNumber);
+        dbgPrint(DBG_INFO, "gpioValidatePin() failed. Ensure pin %d is valid.", gpioNumber);
     }
 
     else
@@ -203,20 +214,20 @@ errStatus gpioSetPin(int gpioNumber, eState state)
 
     if (gGpioMap == NULL)
     {
-       dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup called successfully.");
+       dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
        rtn = ERROR_NULL;
     } 
     
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
-       dbgPrint(DBG_INFO,"gpioValidatePin failed. Pin %d isn't valid.", gpioNumber);
+       dbgPrint(DBG_INFO, "gpioValidatePin() failed. Ensure pin %d is valid.", gpioNumber);
     }
 
     else if (state == high)
     {
         /* The offsets are all in bytes. Divide by sizeof uint32_t to allow
          * pointer addition. */
-        *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t *)) = 0x1 << gpioNumber;
+        GPIO_GPSET0 = 0x1 << gpioNumber;
         rtn = OK;
     }
     
@@ -224,7 +235,7 @@ errStatus gpioSetPin(int gpioNumber, eState state)
     {
         /* The offsets are all in bytes. Divide by sizeof uint32_t to allow
          * pointer addition. */
-        *(gGpioMap +  GPCLR0_OFFSET / sizeof(uint32_t *)) = 0x1 << gpioNumber;
+        GPIO_GPCLR0 = 0x1 << gpioNumber;
         rtn = OK;
     }
 
@@ -250,19 +261,19 @@ errStatus gpioReadPin(int gpioNumber, eState * state)
 
     if (gGpioMap == NULL)
     {
-        dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup called successfully.");
+        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
         rtn = ERROR_NULL;
     }
     
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
-        dbgPrint(DBG_INFO,"gpioValidatePin failed. Pin %d isn't valid.", gpioNumber);
+        dbgPrint(DBG_INFO, "gpioValidatePin() failed. Pin %d isn't valid.", gpioNumber);
     }
     
     else 
     {
         /* Check if the appropriate bit is high */
-        if (*(gGpioMap + GPLEV0_OFFSET / sizeof(uint32_t *)) & (0x1 << gpioNumber))
+        if (GPIO_GPLEV0 & (0x1 << gpioNumber))
         {
             *state = high;
         }
@@ -292,18 +303,18 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
     
     if (gGpioMap == NULL)
     {
-       dbgPrint(DBG_INFO,"gGpioMap was NULL. Ensure gpioSetup called successfully.");
+       dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
        rtn = ERROR_NULL;
     } 
     
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
-       dbgPrint(DBG_INFO,"gpioValidatePin failed. Pin %d isn't valid.", gpioNumber);
+       dbgPrint(DBG_INFO, "gpioValidatePin() failed. Pin %d isn't valid.", gpioNumber);
     }
 
     else if (resistorOption < pullDisable || resistorOption > pullup)
     {
-       dbgPrint(DBG_INFO,"resistorOption value: %d was out of range.", resistorOption);
+       dbgPrint(DBG_INFO, "resistorOption value: %d was out of range.", resistorOption);
        rtn = ERROR_RANGE;
     }
 
@@ -313,15 +324,15 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
         sleepTime.tv_nsec = 1000 * RESISTOR_SLEEP_US;
 
         /* Set the GPPUD register with the desired resistor type */
-        *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t *)) = resistorOption;
+        GPIO_GPPUD = resistorOption;
         /* Wait for control signal to be set up */
         nanosleep(&sleepTime, NULL);
         /* Clock the control signal for desired resistor */
-        *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t *)) = (0x1 << gpioNumber);
+        GPIO_GPPUDCLK0 = (0x1 << gpioNumber);
         /* Hold to set */
         nanosleep(&sleepTime, NULL);
-        *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t *)) = 0;
-        *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t *)) = 0;
+        GPIO_GPPUD = 0;
+        GPIO_GPPUDCLK0 = 0;
 
         rtn = OK;
     }

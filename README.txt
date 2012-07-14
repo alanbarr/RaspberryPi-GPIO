@@ -1,7 +1,9 @@
 #################### DOCUMENTATION #####################
-There is more detailed Doxygen produced documentation available both in:
-documentation/html
+There is more detailed Doxygen produced documentation available in:
 http://alanbarr.github.com/RaspberryPi-GPIO
+
+The documentation can be generated if you have Doxygen installed. 
+Change directory into documentation and run "doxygen Doxyfile".
 
 #################### BUILDING ####################
 To build the library type make within the src directory.

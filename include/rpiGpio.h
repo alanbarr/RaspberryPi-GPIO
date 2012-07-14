@@ -26,19 +26,19 @@
 #include "bcm2835_gpio.h"
 #include <stdio.h>                 
 
-/** The size the GPIO mapping is required to be. GPPUDCLK1_OFFSET is the last
- ** register offset of interest. */
+/** @brief The size the GPIO mapping is required to be.
+ *  @details GPPUDCLK1_OFFSET is the last register offset of interest. */
 #define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET) 
 
-/** Number of GPIO pins which are available on the Raspberry Pi. */
+/** @brief Number of GPIO pins which are available on the Raspberry Pi. */
 #define NUMBER_GPIO                 17
 
-/** Delay for changing pullup/pulldown resistors. It should be at least 150 
- ** cycles which is 0.21 uS (1 / 700 MHz * 150). */
+/** @brief Delay for changing pullup/pulldown resistors
+ *  @details It should be at least 150 cycles which is 0.21 uS (1 / 700 MHz * 150). */
 #define RESISTOR_SLEEP_US           1
 
-/** The list of errors which may be returned from gpio functions. Errors are
- ** defined within #ERROR(x). */
+/** @brief The list of errors which may be returned from gpio functions. 
+ *  @details Errors are defined within #ERROR(x). */
 #define ERRORS                          \
     ERROR(OK)                           \
     ERROR(ERROR_DEFAULT)                \
@@ -48,31 +48,31 @@
     ERROR(ERROR_EXTERNAL)               \
 
 #undef  ERROR
-/** Redefining to replace the macro with x. */
+/** @brief Redefining to replace the macro with x. */
 #define ERROR(x) x,
 
-/** The enum of possible errors returned from gpio functions. Errors themselves
- ** are defined in the macro #ERRORS. */
+/** @brief The enum of possible errors returned from gpio functions.
+ *  Errors themselves are defined in the macro #ERRORS. */
 typedef enum {
     ERRORS
     ERROR_MAX   
 } errStatus;
 
-/** The enum of possible pin states in input/output modes. */
+/** @brief The enum of possible pin states in input/output modes. */
 typedef enum {
     low  = 0x0, /**< Pin low */
     high = 0x1  /**< Pin high */
 } eState;
 
-/** The enum for possible pull resistors. */
+/** @brief The enum for possible pull resistors. */
 typedef enum {
     pullDisable = GPPUD_DISABLE,  /**< No resistor */
     pulldown    = GPPUD_PULLDOWN, /**< Pulldown resistor */
     pullup      = GPPUD_PULLUP    /**< Pullup resistor */
 } eResistor;
 
-/** The enum of pin functions available. The enum values are 
- ** equivalent to those in the data sheet. 
+/** @brief The enum of pin functions available. 
+ ** @details The enum values are equivalent to those in the data sheet. 
  ** @note Currently only pins configured for input and output have been 
  ** tested. */
 typedef enum {
@@ -99,7 +99,7 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
 const char * gpioErrToString(errStatus error);
 int dbgPrint(FILE * stream, const char * file, int line, const char * format, ...);
 
-/** Macro which covers the first three arguments of dbgPrint. */
+/** @brief Macro which covers the first three arguments of dbgPrint. */
 #define DBG_INFO stderr,__FILE__,__LINE__
 
 #endif /* _RPI_GPIO_H_ */

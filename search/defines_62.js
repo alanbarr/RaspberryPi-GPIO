@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['bcm2835_5fgpio_2eh',['bcm2835_gpio.h',['../bcm2835__gpio_8h.html',1,'']]],
   ['bsc0_5fa',['BSC0_A',['../bcm2835__gpio_8h.html#ae1acebbffceb7dd258ed3bda7c08c8ef',1,'bcm2835_gpio.h']]],
   ['bsc0_5fa_5foffset',['BSC0_A_OFFSET',['../bcm2835__gpio_8h.html#a0947037ae5dfd2aca65fc84490c55322',1,'bcm2835_gpio.h']]],
   ['bsc0_5fbase',['BSC0_BASE',['../bcm2835__gpio_8h.html#a19fffa76669282efff861b8631386725',1,'bcm2835_gpio.h']]],

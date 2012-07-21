@@ -28,7 +28,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Raspberry Pi GPIO Library
-   &#160;<span id="projectnumber">0.1</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">Library allowing for control of the Raspberry Pi&#39;s GPIO pins.</div>
   </td>
@@ -89,28 +89,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="bcm2835__gpio_8h_source.html">bcm2835_gpio.h</a>&quot;</code><br/>
 <code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;stdint.h&gt;</code><br/>
 </div>
 <p><a href="rpiGpio_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a9542a6000bf702bcd6cc746a6ea288a5">GPIO_MAP_SIZE</a>&#160;&#160;&#160;(<a class="el" href="bcm2835__gpio_8h.html#a3170193b23e4548ab9b2dbbccb243b67">GPPUDCLK1_OFFSET</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a6b64e894305a43aa29bd86da0ef71a42">NUMBER_GPIO</a>&#160;&#160;&#160;17</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a35aef2f894cc5896f369c190943bbe5d">RESISTOR_SLEEP_US</a>&#160;&#160;&#160;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6de914aacae9426daf5d723e0214185f"></a><!-- doxytag: member="rpiGpio.h::CORE_CLK_HZ" ref="a6de914aacae9426daf5d723e0214185f" args="" -->
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a6de914aacae9426daf5d723e0214185f">CORE_CLK_HZ</a>&#160;&#160;&#160;250000000</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Speed of the core clock core_clk. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395">ERRORS</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">ERROR</a>(x)&#160;&#160;&#160;x,</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a>&#160;&#160;&#160;stderr,__FILE__,__LINE__</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of errors which may be returned from gpio functions.  <a href="#a99b80bb81818c2dad473f11457a79395"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abac57baaff13f3a1ddbb0c8a193b7e32"></a><!-- doxytag: member="rpiGpio.h::ERROR" ref="abac57baaff13f3a1ddbb0c8a193b7e32" args="(x)" -->
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">ERROR</a>(x)&#160;&#160;&#160;x,</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Redefining to replace the macro with x. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9615e001b781d55752b3d44f9bfd5162"></a><!-- doxytag: member="rpiGpio.h::DBG_INFO" ref="a9615e001b781d55752b3d44f9bfd5162" args="" -->
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a>&#160;&#160;&#160;stderr,__FILE__,__LINE__</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro which covers the first three arguments of dbgPrint. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> { <b>ERROR_MAX</b>
  }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro <a class="el" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395" title="The list of errors which may be returned from gpio functions.">ERRORS</a>. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">eState</a> { <a class="el" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3">low</a> =  0x0, 
 <a class="el" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a4a730add1be3f261a335b140fa220c76">high</a> =  0x1
  }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The enum of possible pin states in input/output modes.  <a href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">eResistor</a> { <a class="el" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b">pullDisable</a> =  GPPUD_DISABLE, 
 <a class="el" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47ad3d9588ed049259fe49af7ed053d8e6a">pulldown</a> =  GPPUD_PULLDOWN, 
 <a class="el" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47aac4f9d02939feda07a13ace4e2bf6602">pullup</a> =  GPPUD_PULLUP
  }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The enum for possible pull resistors.  <a href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">eFunction</a> { <br/>
 &#160;&#160;<a class="el" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528">input</a> =  GPFSEL_INPUT, 
 <a class="el" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fae6eb596f7e638118128651043ff38545">output</a> =  GPFSEL_OUTPUT, 
@@ -126,6 +135,7 @@ Enumerations</h2></td></tr>
 <a class="el" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818faac35e8c927cdcd8a307cc34be0b73a47">eFunctionMax</a> =  GPFSEL_ALT3
 <br/>
  }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The enum of pin functions available.  <a href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a0b78dc8e68922dfb7a99e8c73877d215">gpioSetup</a> (void)</td></tr>
@@ -140,6 +150,18 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the current state of a gpio pin.  <a href="#a849a1e5b4223c471ba73e6c09e28ae59"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#aedaadc759885dbc605bfbdbecb73952c">gpioSetPullResistor</a> (int gpioNumber, <a class="el" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">eResistor</a> resistor)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows configuration of the internal resistor at a GPIO pin.  <a href="#aedaadc759885dbc605bfbdbecb73952c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a593fa5dc959ca8a64be99d019a441ddc">gpioI2cSetup</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial setup of I2C functionality.  <a href="#a593fa5dc959ca8a64be99d019a441ddc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a9d022272e845a6e9919d3fa4aa62df8f">gpioI2cCleanup</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables the I2C controller and unmaps the memory used for the i2c functionality. This function should be called when finished with the I2C module.  <a href="#a9d022272e845a6e9919d3fa4aa62df8f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a8035514c80390ac6b37bb7cc64e95c58">gpioI2cSetClock</a> (int frequency)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the I2C Clock Frequency.  <a href="#a8035514c80390ac6b37bb7cc64e95c58"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#a852d9dd7c454b47929b5cd0380405f6a">gpioI2cSet7BitSlave</a> (uint8_t slaveAddress)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the 7-bit slave address to communicate with.  <a href="#a852d9dd7c454b47929b5cd0380405f6a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#adae6d49dedb53d4ce4da8f9e7135b6ef">gpioI2cWriteData</a> (const uint8_t *data, uint16_t dataLength)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes <code>data</code> to the address previously specified by <a class="el" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave()</a>.  <a href="#adae6d49dedb53d4ce4da8f9e7135b6ef"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#aa370fbc453ae57202f4db99e45cce48d">gpioI2cReadData</a> (uint8_t *buffer, uint16_t bytesToRead)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a number of bytes from I2C. The slave address should have been previously set with <a class="el" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave()</a>.  <a href="#aa370fbc453ae57202f4db99e45cce48d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#afdd1d6997bb06665961b2e50fe61d403">gpioErrToString</a> (<a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> error)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Debug function which converts an error from errStatus to a string.  <a href="#afdd1d6997bb06665961b2e50fe61d403"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rpiGpio_8h.html#af0a5b7ef542ee36b320fd991927ecfd3">dbgPrint</a> (FILE *stream, const char *file, int line, const char *format,...)</td></tr>
@@ -154,43 +176,6 @@ Functions</h2></td></tr>
 
 <p>Definition in file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
 </div><hr/><h2>Define Documentation</h2>
-<a class="anchor" id="a9615e001b781d55752b3d44f9bfd5162"></a><!-- doxytag: member="rpiGpio.h::DBG_INFO" ref="a9615e001b781d55752b3d44f9bfd5162" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a>&#160;&#160;&#160;stderr,__FILE__,__LINE__</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Macro which covers the first three arguments of dbgPrint. </p>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="gpio_example_input_8c-example.html#a2">gpio_example_input.c</a>, and <a class="el" href="gpio_example_output_8c-example.html#a2">gpio_example_output.c</a>.</dd>
-</dl>
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00103">103</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abac57baaff13f3a1ddbb0c8a193b7e32"></a><!-- doxytag: member="rpiGpio.h::ERROR" ref="abac57baaff13f3a1ddbb0c8a193b7e32" args="(x)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">ERROR</a></td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">x</td><td>)</td>
-          <td>&#160;&#160;&#160;x,</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Redefining to replace the macro with x. </p>
-
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00052">52</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a99b80bb81818c2dad473f11457a79395"></a><!-- doxytag: member="rpiGpio.h::ERRORS" ref="a99b80bb81818c2dad473f11457a79395" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -201,63 +186,22 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">ERROR</a>(OK)                           \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32" title="Redefining to replace the macro with x.">ERROR</a>(OK)                           \
     ERROR(ERROR_DEFAULT)                \
     ERROR(ERROR_INVALID_PIN_NUMBER)     \
     ERROR(ERROR_RANGE)                  \
     ERROR(ERROR_NULL)                   \
     ERROR(ERROR_EXTERNAL)               \
-</pre></div><p>The list of errors which may be returned from gpio functions. Errors are defined within <a class="el" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">ERROR(x)</a>. </p>
+    ERROR(ERROR_NOT_INITIALISED)        \
+    ERROR(ERROR_ALREADY_INITIALISED)    \
+    ERROR(ERROR_I2C_NACK)               \
+    ERROR(ERROR_I2C)                    \
+    ERROR(ERROR_I2C_CLK_TIMEOUT)        \
+</pre></div>
+<p>The list of errors which may be returned from gpio functions. </p>
+<p>Errors are defined within <a class="el" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32" title="Redefining to replace the macro with x.">ERROR(x)</a>. </p>
 
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00042">42</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a9542a6000bf702bcd6cc746a6ea288a5"></a><!-- doxytag: member="rpiGpio.h::GPIO_MAP_SIZE" ref="a9542a6000bf702bcd6cc746a6ea288a5" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="rpiGpio_8h.html#a9542a6000bf702bcd6cc746a6ea288a5">GPIO_MAP_SIZE</a>&#160;&#160;&#160;(<a class="el" href="bcm2835__gpio_8h.html#a3170193b23e4548ab9b2dbbccb243b67">GPPUDCLK1_OFFSET</a>)</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The size the GPIO mapping is required to be. GPPUDCLK1_OFFSET is the last register offset of interest. </p>
-
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00031">31</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6b64e894305a43aa29bd86da0ef71a42"></a><!-- doxytag: member="rpiGpio.h::NUMBER_GPIO" ref="a6b64e894305a43aa29bd86da0ef71a42" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="rpiGpio_8h.html#a6b64e894305a43aa29bd86da0ef71a42">NUMBER_GPIO</a>&#160;&#160;&#160;17</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Number of GPIO pins which are available on the Raspberry Pi. </p>
-
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00034">34</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a35aef2f894cc5896f369c190943bbe5d"></a><!-- doxytag: member="rpiGpio.h::RESISTOR_SLEEP_US" ref="a35aef2f894cc5896f369c190943bbe5d" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define <a class="el" href="rpiGpio_8h.html#a35aef2f894cc5896f369c190943bbe5d">RESISTOR_SLEEP_US</a>&#160;&#160;&#160;1</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Delay for changing pullup/pulldown resistors. It should be at least 150 cycles which is 0.21 uS (1 / 700 MHz * 150). </p>
-
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00038">38</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00035">35</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
 
 </div>
 </div>
@@ -272,7 +216,9 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The enum of pin functions available. The enum values are equivalent to those in the data sheet. </p>
+
+<p>The enum of pin functions available. </p>
+<p>The enum values are equivalent to those in the data sheet. </p>
 <dl class="note"><dt><b>Note:</b></dt><dd>Currently only pins configured for input and output have been tested. </dd></dl>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528"></a><!-- doxytag: member="input" ref="aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528" args="" -->input</em>&nbsp;</td><td>
@@ -309,7 +255,7 @@ Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00078">78</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00077">77</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
 
 </div>
 </div>
@@ -323,6 +269,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
 <p>The enum for possible pull resistors. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b"></a><!-- doxytag: member="pullDisable" ref="aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b" args="" -->pullDisable</em>&nbsp;</td><td>
@@ -338,23 +285,7 @@ Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00068">68</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a130fb43c66c07448041da10becd8acfd"></a><!-- doxytag: member="rpiGpio.h::errStatus" ref="a130fb43c66c07448041da10becd8acfd" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro <a class="el" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395">ERRORS</a>. </p>
-
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00056">56</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00067">67</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
 
 </div>
 </div>
@@ -368,6 +299,7 @@ Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
 <p>The enum of possible pin states in input/output modes. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3"></a><!-- doxytag: member="low" ref="af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3" args="" -->low</em>&nbsp;</td><td>
@@ -380,7 +312,7 @@ Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00062">62</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
+<p>Definition at line <a class="el" href="rpiGpio_8h_source.html#l00061">61</a> of file <a class="el" href="rpiGpio_8h_source.html">rpiGpio.h</a>.</p>
 
 </div>
 </div>
@@ -429,7 +361,7 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Debug function wrapper for fprintf(). </p>
-<p>Allows file and line information to be added easier to output strings. <a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">DBG_INFO</a> is a macro which is useful to call as the "first" parameter to this function. Note this function will add on a newline to the end of a format string so one is generally not required in <code>format</code>. </p>
+<p>Allows file and line information to be added easier to output strings. <a class="el" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162" title="Macro which covers the first three arguments of dbgPrint.">DBG_INFO</a> is a macro which is useful to call as the "first" parameter to this function. Note this function will add on a newline to the end of a format string so one is generally not required in <code>format</code>. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>Output stream for strings, e.g. stderr, stdout. </td></tr>
@@ -442,7 +374,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>This function uses the printf() family functions and the returned integer is what is returned from these calls: If successful the number or characters printed is returned, if unsuccessful a negative value. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00377">377</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00397">397</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -462,9 +394,9 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO pins. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00126">126</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00146">146</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -486,13 +418,194 @@ Functions</h2></td></tr>
 <p>Debug function which converts an error from errStatus to a string. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">error</td><td>Error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </td></tr>
+    <tr><td class="paramname">error</td><td>Error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>String representation of errStatus parameter error. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00343">343</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00363">363</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9d022272e845a6e9919d3fa4aa62df8f"></a><!-- doxytag: member="rpiGpio.h::gpioI2cCleanup" ref="a9d022272e845a6e9919d3fa4aa62df8f" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#a9d022272e845a6e9919d3fa4aa62df8f">gpioI2cCleanup</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Disables the I2C controller and unmaps the memory used for the i2c functionality. This function should be called when finished with the I2C module. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00203">203</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa370fbc453ae57202f4db99e45cce48d"></a><!-- doxytag: member="rpiGpio.h::gpioI2cReadData" ref="aa370fbc453ae57202f4db99e45cce48d" args="(uint8_t *buffer, uint16_t bytesToRead)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#aa370fbc453ae57202f4db99e45cce48d">gpioI2cReadData</a> </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>bytesToRead</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Read a number of bytes from I2C. The slave address should have been previously set with <a class="el" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave()</a>. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">buffer</td><td>A pointer to a user defined buffer which will store the bytes. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">bytesToRead</td><td>The number of bytes to read. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00387">387</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a852d9dd7c454b47929b5cd0380405f6a"></a><!-- doxytag: member="rpiGpio.h::gpioI2cSet7BitSlave" ref="a852d9dd7c454b47929b5cd0380405f6a" args="(uint8_t slaveAddress)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#a852d9dd7c454b47929b5cd0380405f6a">gpioI2cSet7BitSlave</a> </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>slaveAddress</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the 7-bit slave address to communicate with. </p>
+<p>This value can be set once and left if communicating with the same device. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">slaveAddress</td><td>7-bit slave address. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00256">256</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8035514c80390ac6b37bb7cc64e95c58"></a><!-- doxytag: member="rpiGpio.h::gpioI2cSetClock" ref="a8035514c80390ac6b37bb7cc64e95c58" args="(int frequency)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#a8035514c80390ac6b37bb7cc64e95c58">gpioI2cSetClock</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>frequency</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Sets the I2C Clock Frequency. </p>
+<dl class="note"><dt><b>Note:</b></dt><dd>The desired frequency should be in the range: <a class="el" href="i2c_8c.html#adf02ee6ccd10a1e47cb763701011cdf6" title="Minimum I2C frequency (Hertz)">I2C_CLOCK_FREQ_MIN</a> &lt;= <code>frequency</code> &lt;= <a class="el" href="i2c_8c.html#ab2cdd211f2c2abd645a7219fbef19a96" title="Maximum I2C frequency (Hertz)">I2C_CLOCK_FREQ_MAX</a>. </dd></dl>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frequency</td><td>Desired frequency in Hertz. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00504">504</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a593fa5dc959ca8a64be99d019a441ddc"></a><!-- doxytag: member="rpiGpio.h::gpioI2cSetup" ref="a593fa5dc959ca8a64be99d019a441ddc" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#a593fa5dc959ca8a64be99d019a441ddc">gpioI2cSetup</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initial setup of I2C functionality. </p>
+<p><a class="el" href="gpio_8c.html#a0b78dc8e68922dfb7a99e8c73877d215" title="Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO cal...">gpioSetup()</a> should be called prior to this. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00110">110</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adae6d49dedb53d4ce4da8f9e7135b6ef"></a><!-- doxytag: member="rpiGpio.h::gpioI2cWriteData" ref="adae6d49dedb53d4ce4da8f9e7135b6ef" args="(const uint8_t *data, uint16_t dataLength)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="el" href="rpiGpio_8h.html#adae6d49dedb53d4ce4da8f9e7135b6ef">gpioI2cWriteData</a> </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>dataLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Writes <code>data</code> to the address previously specified by <a class="el" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave()</a>. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to the start of data to transmit. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">dataLength</td><td>The length of <code>data</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>errStatus An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="i2c_8c_source.html#l00282">282</a> of file <a class="el" href="i2c_8c_source.html">i2c.c</a>.</p>
 
 </div>
 </div>
@@ -529,9 +642,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00247">247</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00267">267</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -568,9 +681,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00156">156</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00176">176</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -600,7 +713,7 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Sets a pin to high or low. </p>
-<p>The pin should be configured as an ouput with <a class="el" href="rpiGpio_8c.html#a2224d22096f65052963234956131295a" title="Sets the functionality of the desired pin.">gpioSetFunction()</a> prior to this. </p>
+<p>The pin should be configured as an ouput with <a class="el" href="gpio_8c.html#a2224d22096f65052963234956131295a" title="Sets the functionality of the desired pin.">gpioSetFunction()</a> prior to this. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">gpioNumber</td><td>The pin to set. </td></tr>
@@ -608,9 +721,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00200">200</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00220">220</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -648,9 +761,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00288">288</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00308">308</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -670,9 +783,9 @@ Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO calls. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>An error from <a class="el" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>. </dd></dl>
 
-<p>Definition at line <a class="el" href="rpiGpio_8c_source.html#l00084">84</a> of file <a class="el" href="rpiGpio_8c_source.html">rpiGpio.c</a>.</p>
+<p>Definition at line <a class="el" href="gpio_8c_source.html#l00104">104</a> of file <a class="el" href="gpio_8c_source.html">gpio.c</a>.</p>
 
 </div>
 </div>
@@ -682,7 +795,7 @@ Functions</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -694,7 +807,7 @@ Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 12 2012 22:37:23 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 21 2012 23:01:44 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

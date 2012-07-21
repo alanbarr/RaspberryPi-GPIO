@@ -28,7 +28,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Raspberry Pi GPIO Library
-   &#160;<span id="projectnumber">0.1</span>
+   &#160;<span id="projectnumber">0.2</span>
    </div>
    <div id="projectbrief">Library allowing for control of the Raspberry Pi&#39;s GPIO pins.</div>
   </td>
@@ -86,75 +86,88 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00025"></a>00025 <span class="preprocessor"></span>
 <a name="l00026"></a>00026 <span class="preprocessor">#include &quot;<a class="code" href="bcm2835__gpio_8h.html" title="Header file for BCM2835 GPIO registers.">bcm2835_gpio.h</a>&quot;</span>
 <a name="l00027"></a>00027 <span class="preprocessor">#include &lt;stdio.h&gt;</span>                 
-<a name="l00028"></a>00028 
-<a name="l00031"></a><a class="code" href="rpiGpio_8h.html#a9542a6000bf702bcd6cc746a6ea288a5">00031</a> <span class="preprocessor">#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET) </span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
+<a name="l00029"></a>00029 
+<a name="l00031"></a><a class="code" href="rpiGpio_8h.html#a6de914aacae9426daf5d723e0214185f">00031</a> <span class="preprocessor">#define CORE_CLK_HZ                 250000000</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
-<a name="l00034"></a><a class="code" href="rpiGpio_8h.html#a6b64e894305a43aa29bd86da0ef71a42">00034</a> <span class="preprocessor">#define NUMBER_GPIO                 17</span>
-<a name="l00035"></a>00035 <span class="preprocessor"></span>
-<a name="l00038"></a><a class="code" href="rpiGpio_8h.html#a35aef2f894cc5896f369c190943bbe5d">00038</a> <span class="preprocessor">#define RESISTOR_SLEEP_US           1</span>
-<a name="l00039"></a>00039 <span class="preprocessor"></span>
-<a name="l00042"></a><a class="code" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395">00042</a> <span class="preprocessor">#define ERRORS                          \</span>
-<a name="l00043"></a>00043 <span class="preprocessor">    ERROR(OK)                           \</span>
-<a name="l00044"></a>00044 <span class="preprocessor">    ERROR(ERROR_DEFAULT)                \</span>
-<a name="l00045"></a>00045 <span class="preprocessor">    ERROR(ERROR_INVALID_PIN_NUMBER)     \</span>
-<a name="l00046"></a>00046 <span class="preprocessor">    ERROR(ERROR_RANGE)                  \</span>
-<a name="l00047"></a>00047 <span class="preprocessor">    ERROR(ERROR_NULL)                   \</span>
-<a name="l00048"></a>00048 <span class="preprocessor">    ERROR(ERROR_EXTERNAL)               \</span>
-<a name="l00049"></a>00049 <span class="preprocessor"></span>
-<a name="l00050"></a>00050 <span class="preprocessor"></span><span class="preprocessor">#undef  ERROR</span>
-<a name="l00051"></a>00051 <span class="preprocessor"></span>
-<a name="l00052"></a><a class="code" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">00052</a> <span class="preprocessor">#define ERROR(x) x,</span>
-<a name="l00053"></a>00053 <span class="preprocessor"></span>
-<a name="l00056"></a><a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">00056</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
-<a name="l00057"></a>00057     <a class="code" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395">ERRORS</a>
-<a name="l00058"></a>00058     ERROR_MAX   
-<a name="l00059"></a>00059 } <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a>;
-<a name="l00060"></a>00060 
-<a name="l00062"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">00062</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
-<a name="l00063"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3">00063</a>     <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3">low</a>  = 0x0, 
-<a name="l00064"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a4a730add1be3f261a335b140fa220c76">00064</a>     <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a4a730add1be3f261a335b140fa220c76">high</a> = 0x1  
-<a name="l00065"></a>00065 } <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">eState</a>;
-<a name="l00066"></a>00066 
-<a name="l00068"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">00068</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
-<a name="l00069"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b">00069</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b">pullDisable</a> = <a class="code" href="bcm2835__gpio_8h.html#a9cd107cbc61189656341988a60912897">GPPUD_DISABLE</a>,  
-<a name="l00070"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47ad3d9588ed049259fe49af7ed053d8e6a">00070</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47ad3d9588ed049259fe49af7ed053d8e6a">pulldown</a>    = <a class="code" href="bcm2835__gpio_8h.html#acef1cc1e1a55ac832de883f9bdc426de">GPPUD_PULLDOWN</a>, 
-<a name="l00071"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47aac4f9d02939feda07a13ace4e2bf6602">00071</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47aac4f9d02939feda07a13ace4e2bf6602">pullup</a>      = <a class="code" href="bcm2835__gpio_8h.html#af743f486cbb3e701a092b05d11082b3e">GPPUD_PULLUP</a>    
-<a name="l00072"></a>00072 } <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">eResistor</a>;
-<a name="l00073"></a>00073 
-<a name="l00078"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">00078</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
-<a name="l00079"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528">00079</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528">input</a>  = <a class="code" href="bcm2835__gpio_8h.html#aaefe895f7fb1833cb61d66f7a17d37b3">GPFSEL_INPUT</a>,        
-<a name="l00080"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fae6eb596f7e638118128651043ff38545">00080</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fae6eb596f7e638118128651043ff38545">output</a> = <a class="code" href="bcm2835__gpio_8h.html#a9f5732428d069bfab58e700f75b5fdca">GPFSEL_OUTPUT</a>,       
-<a name="l00081"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa0e19f68588a6959ca4f0d74fb32ca72c">00081</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa0e19f68588a6959ca4f0d74fb32ca72c">alt0</a>   = <a class="code" href="bcm2835__gpio_8h.html#abef9dd2bc05fea12e55445ec0f104143">GPFSEL_ALT0</a>,         
-<a name="l00082"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa3abe1eaebc98b53bbc36be3820e8aee6">00082</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa3abe1eaebc98b53bbc36be3820e8aee6">alt1</a>   = <a class="code" href="bcm2835__gpio_8h.html#a83510c5a4fa5013eb1875a3c527ed45b">GPFSEL_ALT1</a>,         
-<a name="l00083"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa24924d8b71454e7d287e484589407660">00083</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa24924d8b71454e7d287e484589407660">alt2</a>   = <a class="code" href="bcm2835__gpio_8h.html#afaffb6a557f765838021c7ec88199081">GPFSEL_ALT2</a>,         
-<a name="l00084"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa6da62bfc0c37f84d512f9bfe7d2fb4eb">00084</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa6da62bfc0c37f84d512f9bfe7d2fb4eb">alt3</a>   = <a class="code" href="bcm2835__gpio_8h.html#a000e330faf2573a5d5e9afe815d5fb7e">GPFSEL_ALT3</a>,         
-<a name="l00085"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa26915aa16164098dfadd2722824a1ef7">00085</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa26915aa16164098dfadd2722824a1ef7">alt4</a>   = <a class="code" href="bcm2835__gpio_8h.html#ae00d778f25454dbb6cd051265be3a94b">GPFSEL_ALT4</a>,         
-<a name="l00086"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa04ced82b28aa5577589fd9f947210b60">00086</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa04ced82b28aa5577589fd9f947210b60">alt5</a>   = <a class="code" href="bcm2835__gpio_8h.html#adf1a30a31e468ed96256eff67af61a9a">GPFSEL_ALT5</a>,         
-<a name="l00087"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fafa3040caaceef8f1a3e1852fcefdbbb0">00087</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fafa3040caaceef8f1a3e1852fcefdbbb0">eFunctionMin</a> = <a class="code" href="bcm2835__gpio_8h.html#aaefe895f7fb1833cb61d66f7a17d37b3">GPFSEL_INPUT</a>,  
-<a name="l00088"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818faac35e8c927cdcd8a307cc34be0b73a47">00088</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818faac35e8c927cdcd8a307cc34be0b73a47">eFunctionMax</a> = <a class="code" href="bcm2835__gpio_8h.html#a000e330faf2573a5d5e9afe815d5fb7e">GPFSEL_ALT3</a>    
-<a name="l00089"></a>00089 } <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">eFunction</a>;
+<a name="l00035"></a><a class="code" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395">00035</a> <span class="preprocessor">#define ERRORS                          \</span>
+<a name="l00036"></a>00036 <span class="preprocessor">    ERROR(OK)                           \</span>
+<a name="l00037"></a>00037 <span class="preprocessor">    ERROR(ERROR_DEFAULT)                \</span>
+<a name="l00038"></a>00038 <span class="preprocessor">    ERROR(ERROR_INVALID_PIN_NUMBER)     \</span>
+<a name="l00039"></a>00039 <span class="preprocessor">    ERROR(ERROR_RANGE)                  \</span>
+<a name="l00040"></a>00040 <span class="preprocessor">    ERROR(ERROR_NULL)                   \</span>
+<a name="l00041"></a>00041 <span class="preprocessor">    ERROR(ERROR_EXTERNAL)               \</span>
+<a name="l00042"></a>00042 <span class="preprocessor">    ERROR(ERROR_NOT_INITIALISED)        \</span>
+<a name="l00043"></a>00043 <span class="preprocessor">    ERROR(ERROR_ALREADY_INITIALISED)    \</span>
+<a name="l00044"></a>00044 <span class="preprocessor">    ERROR(ERROR_I2C_NACK)               \</span>
+<a name="l00045"></a>00045 <span class="preprocessor">    ERROR(ERROR_I2C)                    \</span>
+<a name="l00046"></a>00046 <span class="preprocessor">    ERROR(ERROR_I2C_CLK_TIMEOUT)        \</span>
+<a name="l00047"></a>00047 <span class="preprocessor"></span>
+<a name="l00048"></a>00048 <span class="preprocessor"></span>
+<a name="l00049"></a>00049 <span class="preprocessor">#undef  ERROR</span>
+<a name="l00050"></a>00050 <span class="preprocessor"></span>
+<a name="l00051"></a><a class="code" href="rpiGpio_8h.html#abac57baaff13f3a1ddbb0c8a193b7e32">00051</a> <span class="preprocessor">#define ERROR(x) x,</span>
+<a name="l00052"></a>00052 <span class="preprocessor"></span>
+<a name="l00055"></a><a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">00055</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
+<a name="l00056"></a>00056     <a class="code" href="rpiGpio_8h.html#a99b80bb81818c2dad473f11457a79395" title="The list of errors which may be returned from gpio functions.">ERRORS</a>
+<a name="l00057"></a>00057     ERROR_MAX   
+<a name="l00058"></a>00058 } <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a>;
+<a name="l00059"></a>00059 
+<a name="l00061"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">00061</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
+<a name="l00062"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3">00062</a>     <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a255eedc46d9e0ae208805501fe0b0ea3">low</a>  = 0x0, 
+<a name="l00063"></a><a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a4a730add1be3f261a335b140fa220c76">00063</a>     <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42a4a730add1be3f261a335b140fa220c76">high</a> = 0x1  
+<a name="l00064"></a>00064 } <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42" title="The enum of possible pin states in input/output modes.">eState</a>;
+<a name="l00065"></a>00065 
+<a name="l00067"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">00067</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
+<a name="l00068"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b">00068</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47a466fafb4c083bcc0c83daa692f11344b">pullDisable</a> = <a class="code" href="bcm2835__gpio_8h.html#a9cd107cbc61189656341988a60912897">GPPUD_DISABLE</a>,  
+<a name="l00069"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47ad3d9588ed049259fe49af7ed053d8e6a">00069</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47ad3d9588ed049259fe49af7ed053d8e6a">pulldown</a>    = <a class="code" href="bcm2835__gpio_8h.html#acef1cc1e1a55ac832de883f9bdc426de">GPPUD_PULLDOWN</a>, 
+<a name="l00070"></a><a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47aac4f9d02939feda07a13ace4e2bf6602">00070</a>     <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47aac4f9d02939feda07a13ace4e2bf6602">pullup</a>      = <a class="code" href="bcm2835__gpio_8h.html#af743f486cbb3e701a092b05d11082b3e">GPPUD_PULLUP</a>    
+<a name="l00071"></a>00071 } <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47" title="The enum for possible pull resistors.">eResistor</a>;
+<a name="l00072"></a>00072 
+<a name="l00077"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">00077</a> <span class="keyword">typedef</span> <span class="keyword">enum</span> {
+<a name="l00078"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528">00078</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa37943061a284187ff6e555ac7093f528">input</a>  = <a class="code" href="bcm2835__gpio_8h.html#aaefe895f7fb1833cb61d66f7a17d37b3">GPFSEL_INPUT</a>,        
+<a name="l00079"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fae6eb596f7e638118128651043ff38545">00079</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fae6eb596f7e638118128651043ff38545">output</a> = <a class="code" href="bcm2835__gpio_8h.html#a9f5732428d069bfab58e700f75b5fdca">GPFSEL_OUTPUT</a>,       
+<a name="l00080"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa0e19f68588a6959ca4f0d74fb32ca72c">00080</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa0e19f68588a6959ca4f0d74fb32ca72c">alt0</a>   = <a class="code" href="bcm2835__gpio_8h.html#abef9dd2bc05fea12e55445ec0f104143">GPFSEL_ALT0</a>,         
+<a name="l00081"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa3abe1eaebc98b53bbc36be3820e8aee6">00081</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa3abe1eaebc98b53bbc36be3820e8aee6">alt1</a>   = <a class="code" href="bcm2835__gpio_8h.html#a83510c5a4fa5013eb1875a3c527ed45b">GPFSEL_ALT1</a>,         
+<a name="l00082"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa24924d8b71454e7d287e484589407660">00082</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa24924d8b71454e7d287e484589407660">alt2</a>   = <a class="code" href="bcm2835__gpio_8h.html#afaffb6a557f765838021c7ec88199081">GPFSEL_ALT2</a>,         
+<a name="l00083"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa6da62bfc0c37f84d512f9bfe7d2fb4eb">00083</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa6da62bfc0c37f84d512f9bfe7d2fb4eb">alt3</a>   = <a class="code" href="bcm2835__gpio_8h.html#a000e330faf2573a5d5e9afe815d5fb7e">GPFSEL_ALT3</a>,         
+<a name="l00084"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa26915aa16164098dfadd2722824a1ef7">00084</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa26915aa16164098dfadd2722824a1ef7">alt4</a>   = <a class="code" href="bcm2835__gpio_8h.html#ae00d778f25454dbb6cd051265be3a94b">GPFSEL_ALT4</a>,         
+<a name="l00085"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa04ced82b28aa5577589fd9f947210b60">00085</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa04ced82b28aa5577589fd9f947210b60">alt5</a>   = <a class="code" href="bcm2835__gpio_8h.html#adf1a30a31e468ed96256eff67af61a9a">GPFSEL_ALT5</a>,         
+<a name="l00086"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fafa3040caaceef8f1a3e1852fcefdbbb0">00086</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fafa3040caaceef8f1a3e1852fcefdbbb0">eFunctionMin</a> = <a class="code" href="bcm2835__gpio_8h.html#aaefe895f7fb1833cb61d66f7a17d37b3">GPFSEL_INPUT</a>,  
+<a name="l00087"></a><a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818faac35e8c927cdcd8a307cc34be0b73a47">00087</a>     <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818faac35e8c927cdcd8a307cc34be0b73a47">eFunctionMax</a> = <a class="code" href="bcm2835__gpio_8h.html#a000e330faf2573a5d5e9afe815d5fb7e">GPFSEL_ALT3</a>    
+<a name="l00088"></a>00088 } <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f" title="The enum of pin functions available.">eFunction</a>;
+<a name="l00089"></a>00089 
 <a name="l00090"></a>00090 
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 <span class="comment">/* Function Prototypes */</span>
-<a name="l00093"></a>00093 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a0b78dc8e68922dfb7a99e8c73877d215" title="Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO cal...">gpioSetup</a>(<span class="keywordtype">void</span>);
-<a name="l00094"></a>00094 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a6846efae9091223b6f7652469dfbb38a" title="Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO ...">gpioCleanup</a>(<span class="keywordtype">void</span>);
-<a name="l00095"></a>00095 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a2224d22096f65052963234956131295a" title="Sets the functionality of the desired pin.">gpioSetFunction</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f">eFunction</a> <span class="keyword">function</span>);
-<a name="l00096"></a>00096 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a0f8b2ebd78a885645e4ec3886d610d89" title="Sets a pin to high or low.">gpioSetPin</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">eState</a> state);
-<a name="l00097"></a>00097 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a849a1e5b4223c471ba73e6c09e28ae59" title="Reads the current state of a gpio pin.">gpioReadPin</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42">eState</a> * state);
-<a name="l00098"></a>00098 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> <a class="code" href="rpiGpio_8c.html#a3d9bfe9b0e3a5c20dc8baaf21a36dcf6" title="Allows configuration of the internal resistor at a GPIO pin.">gpioSetPullResistor</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47">eResistor</a> resistor);
-<a name="l00099"></a>00099 <span class="keyword">const</span> <span class="keywordtype">char</span> * <a class="code" href="rpiGpio_8c.html#afdd1d6997bb06665961b2e50fe61d403" title="Debug function which converts an error from errStatus to a string.">gpioErrToString</a>(<a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd">errStatus</a> error);
-<a name="l00100"></a>00100 <span class="keywordtype">int</span> <a class="code" href="rpiGpio_8c.html#af0a5b7ef542ee36b320fd991927ecfd3" title="Debug function wrapper for fprintf().">dbgPrint</a>(FILE * stream, <span class="keyword">const</span> <span class="keywordtype">char</span> * file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> * format, ...);
-<a name="l00101"></a>00101 
-<a name="l00103"></a><a class="code" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">00103</a> <span class="preprocessor">#define DBG_INFO stderr,__FILE__,__LINE__</span>
-<a name="l00104"></a>00104 <span class="preprocessor"></span>
-<a name="l00105"></a>00105 <span class="preprocessor">#endif </span><span class="comment">/* _RPI_GPIO_H_ */</span>
+<a name="l00091"></a>00091 <span class="comment">/* Function Prototypes */</span>
+<a name="l00092"></a>00092 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a0b78dc8e68922dfb7a99e8c73877d215" title="Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO cal...">gpioSetup</a>(<span class="keywordtype">void</span>);
+<a name="l00093"></a>00093 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a6846efae9091223b6f7652469dfbb38a" title="Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO ...">gpioCleanup</a>(<span class="keywordtype">void</span>);
+<a name="l00094"></a>00094 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a2224d22096f65052963234956131295a" title="Sets the functionality of the desired pin.">gpioSetFunction</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818f" title="The enum of pin functions available.">eFunction</a> <span class="keyword">function</span>);
+<a name="l00095"></a>00095 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a0f8b2ebd78a885645e4ec3886d610d89" title="Sets a pin to high or low.">gpioSetPin</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42" title="The enum of possible pin states in input/output modes.">eState</a> state);
+<a name="l00096"></a>00096 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a849a1e5b4223c471ba73e6c09e28ae59" title="Reads the current state of a gpio pin.">gpioReadPin</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#af13698210d209ef8cae10ff537e68b42" title="The enum of possible pin states in input/output modes.">eState</a> * state);
+<a name="l00097"></a>00097 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="gpio_8c.html#a3d9bfe9b0e3a5c20dc8baaf21a36dcf6" title="Allows configuration of the internal resistor at a GPIO pin.">gpioSetPullResistor</a>(<span class="keywordtype">int</span> gpioNumber, <a class="code" href="rpiGpio_8h.html#aff014b77d28f9ad4b1e7862e9df28f47" title="The enum for possible pull resistors.">eResistor</a> resistor);
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#a593fa5dc959ca8a64be99d019a441ddc" title="Initial setup of I2C functionality.">gpioI2cSetup</a>(<span class="keywordtype">void</span>);
+<a name="l00101"></a>00101 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#a9d022272e845a6e9919d3fa4aa62df8f" title="Disables the I2C controller and unmaps the memory used for the i2c functionality. This function shoul...">gpioI2cCleanup</a>(<span class="keywordtype">void</span>);
+<a name="l00102"></a>00102 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#a8035514c80390ac6b37bb7cc64e95c58" title="Sets the I2C Clock Frequency.">gpioI2cSetClock</a>(<span class="keywordtype">int</span> frequency);
+<a name="l00103"></a>00103 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave</a>(uint8_t slaveAddress);
+<a name="l00104"></a>00104 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#adae6d49dedb53d4ce4da8f9e7135b6ef" title="Writes data to the address previously specified by gpioI2cSet7BitSlave().">gpioI2cWriteData</a>(<span class="keyword">const</span> uint8_t * data, uint16_t dataLength);
+<a name="l00105"></a>00105 <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> <a class="code" href="i2c_8c.html#aa370fbc453ae57202f4db99e45cce48d" title="Read a number of bytes from I2C. The slave address should have been previously set with gpioI2cSet7Bi...">gpioI2cReadData</a>(uint8_t * buffer, uint16_t bytesToRead);
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 <span class="keyword">const</span> <span class="keywordtype">char</span> * <a class="code" href="gpio_8c.html#afdd1d6997bb06665961b2e50fe61d403" title="Debug function which converts an error from errStatus to a string.">gpioErrToString</a>(<a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> error);
+<a name="l00109"></a>00109 <span class="keywordtype">int</span> <a class="code" href="gpio_8c.html#af0a5b7ef542ee36b320fd991927ecfd3" title="Debug function wrapper for fprintf().">dbgPrint</a>(FILE * stream, <span class="keyword">const</span> <span class="keywordtype">char</span> * file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> * format, ...);
+<a name="l00110"></a>00110 
+<a name="l00112"></a><a class="code" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162">00112</a> <span class="preprocessor">#define DBG_INFO stderr,__FILE__,__LINE__</span>
+<a name="l00113"></a>00113 <span class="preprocessor"></span>
+<a name="l00114"></a>00114 <span class="preprocessor">#endif </span><span class="comment">/* _RPI_GPIO_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Defines</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Defines</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -166,7 +179,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 12 2012 22:37:23 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Jul 21 2012 23:01:43 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

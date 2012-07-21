@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>Raspberry Pi GPIO Library: File List</title>
+<title>Raspberry Pi GPIO Library: I2C (BSC)</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -47,8 +47,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -68,25 +68,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li class="current"><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
-    </ul>
-  </div>
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">File List</div>  </div>
+<div class="title">I2C (BSC) </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all documented files with brief descriptions:</div><table>
-  <tr><td class="indexkey"><a class="el" href="bcm2835__gpio_8h.html">bcm2835_gpio.h</a> <a href="bcm2835__gpio_8h_source.html">[code]</a></td><td class="indexvalue">Header file for BCM2835 GPIO registers </td></tr>
-  <tr><td class="indexkey"><a class="el" href="gpio_8c.html">gpio.c</a> <a href="gpio_8c_source.html">[code]</a></td><td class="indexvalue">Contains source for the GPIO functionality </td></tr>
-  <tr><td class="indexkey"><a class="el" href="i2c_8c.html">i2c.c</a> <a href="i2c_8c_source.html">[code]</a></td><td class="indexvalue">Contains C source for the I2C functionality </td></tr>
-  <tr><td class="indexkey"><a class="el" href="rpiGpio_8h.html">rpiGpio.h</a> <a href="rpiGpio_8h_source.html">[code]</a></td><td class="indexvalue">The main header file of the GPIO library </td></tr>
-</table>
-</div><!-- contents -->
+<div class="textblock"><p>"The Broadcom Serial Controller (BSC) controller is a master, fast-mode (400Kb/s) BSC controller. The Broadcom Serial Control bus is a proprietary bus compliant with the Philips® I2C bus/interface version 2.1 January 2000." BCM2835 ARM Peripherals</p>
+<h2><a class="anchor" id="i2c_pinout"></a>
+I2C Pins</h2>
+<p>The Raspberry Pi has I2C functionality available at GPIO00, SDA and GPI01, SCL. </p>
+<pre>
+           _______
+  3V3    |  1  2 | 5V         
+  SDA    |  3  4 | DNC        
+  SCL    |  5  6 | GND
+  GPIO04 |  7  8 | GPIO14
+  DNC    |  9 10 | GPIO15
+  GPIO17 | 11 12 | GPIO18
+  GPIO21 | 13 14 | DNC
+  GPIO22 | 15 16 | GPIO23
+  DNC    | 17 18 | GPIO24
+  GPIO10 | 19 20 | DNC
+  GPIO09 | 21 22 | GPIO25
+  GPIO11 | 23 24 | GPIO08
+  DNC    | 25 26 | GPIO07
+          _______
+  </pre> </div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"

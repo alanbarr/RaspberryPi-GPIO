@@ -68,7 +68,7 @@
 /** @brief The size the I2C mapping is required to be. */
 #define I2C_MAP_SIZE                BSC0_DEL_OFFSET
 
-/** @brief Default I2C clock frequency */
+/** @brief Default I2C clock frequency (Hertz) */
 #define I2C_DEFAULT_FREQ_HZ         100000
 
 /** @brief nano seconds in a second */
@@ -77,8 +77,10 @@
 /** @brief Clock pulses per I2C byte - 8 bits + ACK */
 #define CLOCKS_PER_BYTE             9
 
-/** @brief Minimum I2C frequency */
+/** @brief Minimum I2C frequency (Hertz) */
 #define I2C_CLOCK_FREQ_MIN         10000
+
+/** @brief Maximum I2C frequency (Hertz) */
 #define I2C_CLOCK_FREQ_MAX         400000
 
 /** @brief Pointer which will be mmap'd to the I2C memory in /dev/mem */
@@ -102,10 +104,9 @@ static int i2cByteTxTime_ns;
 
 
 /**
- * @brief Initial setup of I2C functionality. 
- * @details gpioSetup() should be called prior
- *          to this.
- * @return An error from #errStatus. */
+ * @brief   Initial setup of I2C functionality. 
+ * @details gpioSetup() should be called prior to this.
+ * @return  An error from #errStatus. */
 errStatus gpioI2cSetup(void)
 {
     int mem_fd = 0; 
@@ -119,7 +120,8 @@ errStatus gpioI2cSetup(void)
     
     else if ((mem_fd = open("/dev/mem", O_RDWR)) < 0) 
     {
-        dbgPrint(DBG_INFO, "open() failed for /dev/mem. errno: %s.", strerror(errno));
+        dbgPrint(DBG_INFO, "open() failed for /dev/mem. errno: %s.",
+                 strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
  
@@ -168,21 +170,25 @@ errStatus gpioI2cSetup(void)
                 gpioErrToString(rtn));
     }
 
+    /* Default the I2C speed to 100 kHz */
+    else if ((rtn = gpioI2cSetClock(I2C_DEFAULT_FREQ_HZ)) != OK)
+    {
+        dbgPrint(DBG_INFO, "gpioI2cSetClock() failed. %s", gpioErrToString(rtn));
+    }
+
     else
     {  
         /* Setup the Control Register.
-         * Enable the BSC Controller
-         * Clear the FIFO */
+         * Enable the BSC Controller.
+         * Clear the FIFO. */
         I2C_C = BSC_I2CEN | BSC_CLEAR ;
 
         /* Setup the Status Register 
-         * Clear NACK ERR flag
-         * Clear Clock stretch flag
-         * Clear Done flag*/
+         * Clear NACK ERR flag.
+         * Clear Clock stretch flag.
+         * Clear Done flag. */
         I2C_S = BSC_ERR | BSC_CLKT | BSC_DONE;
 
-        /* Default the I2C speed to 100 kHz */
-        gpioI2cSetClock(I2C_DEFAULT_FREQ_HZ);
         rtn = OK;
     }
 
@@ -191,8 +197,8 @@ errStatus gpioI2cSetup(void)
 
 /**
  * @brief   Disables the I2C controller and unmaps the memory used for the
- *          gpio pins. This function should be called when finished with the
- *          GPIO pins.
+ *          i2c functionality. This function should be called when finished
+ *          with the I2C module.
  * @return  An error from #errStatus. */
 errStatus gpioI2cCleanup(void)
 {    
@@ -242,9 +248,9 @@ errStatus gpioI2cCleanup(void)
 
 
 /**
- * @brief               Sets the 7-bit slave address to communicate with. This 
- *                      value can be set once and left if communicating with 
- *                      the same device.
+ * @brief               Sets the 7-bit slave address to communicate with.
+ * @details             This value can be set once and left if communicating 
+ *                      with the same device.
  * @param slaveAddress  7-bit slave address.
  * @return              An error from #errStatus. */
 errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress)
@@ -268,8 +274,8 @@ errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress)
 
 
 /**
- * @brief               Writes /p data to the address previously specified by
- *                      gpioI2cSet7BitSlave()
+ * @brief               Writes \p data to the address previously specified by
+ *                      gpioI2cSet7BitSlave().
  * @param[in] data      Pointer to the start of data to transmit.
  * @param dataLength    The length of \p data.
  * @return errStatus    An error from #errStatus */       
@@ -374,7 +380,7 @@ errStatus gpioI2cWriteData(const uint8_t * data, uint16_t dataLength)
 /** 
  * @brief               Read a number of bytes from I2C. The slave address 
  *                      should have been previously set with gpioI2cSet7BitSlave().
- * @param buffer        A pointer to a user defined buffer which will store the bytes.
+ * @param[out] buffer   A pointer to a user defined buffer which will store the bytes.
  * @param bytesToRead   The number of bytes to read.
  * @return              An error from #errStatus.
  */
@@ -480,7 +486,7 @@ errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead)
             rtn = OK;
         }
         
-        /* Clear the flag */
+        /* Clear the DONE flag */
         I2C_S |= BSC_DONE;
 
     }
@@ -489,12 +495,12 @@ errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead)
 }
 
 
-/* TODO
+/**
  * @brief           Sets the I2C Clock Frequency
  * @details         @note The desired frequency should be in the range:
- *                  #I2C_CLOCK_FREQ_MIN <= \p frequency <= #I2C_CLOCK_FREQ_MAX
+ *                  #I2C_CLOCK_FREQ_MIN <= \p frequency <= #I2C_CLOCK_FREQ_MAX.
  * @param frequency Desired frequency in Hertz.
- * @return An error from #errStatus */
+ * @return          An error from #errStatus */
 errStatus gpioI2cSetClock(int frequency)
 {
     errStatus rtn = ERROR_DEFAULT;
@@ -509,8 +515,7 @@ errStatus gpioI2cSetClock(int frequency)
 
     else
     {
-        /*TODO MAYBE ROUND UP :
-         * CDIV is always rounded down to an even number */
+         /*Note CDIV is always rounded down to an even number */
         I2C_DIV = CORE_CLK_HZ / frequency; 
         i2cByteTxTime_ns = (int)(1.0 / ((float)frequency / NSEC_IN_SEC) 
                                  * CLOCKS_PER_BYTE);

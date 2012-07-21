@@ -27,7 +27,7 @@
 #include <stdio.h>                 
 #include <stdint.h>
 
-/** Speed of the core clock core_clk */
+/**@brief Speed of the core clock core_clk */
 #define CORE_CLK_HZ                 250000000
 
 /** @brief The list of errors which may be returned from gpio functions. 

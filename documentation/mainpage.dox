@@ -7,7 +7,7 @@
 @mainpage
 @section getting_started Getting Started
 
-@subsection getting_started_build Building the library: libRpiGpio.a
+@subsection getting_started_build Building the library: librpigpio.a
 
 To build the library file change directory to src (assuming you are at the top 
 level directory of RaspberryPi-GPIO) type "make" in the terminal:
@@ -18,8 +18,8 @@ level directory of RaspberryPi-GPIO) type "make" in the terminal:
 </pre></code>
 
 If this command was successful you should see a new directory called library
-now exists at the root level. libRpiGpio.a should be found in this directory; 
-library/libRpiGpio.a.
+now exists at the root level. librpigpio.a should be found in this directory; 
+library/librpigpio.a.
 
 @subsection getting_started_examples Examples
 There is example code provided in the directory examples. To compile this code

@@ -7,14 +7,14 @@ ARFLAGS=-rcs
 
 OUT_DIR=output
 LIB_DIR=../library
-LIB_NAME=libRpiGpio.a
+LIB_NAME=librpigpio.a
 
 VPATH= $(OUT_DIR) $(LIB_DIR)
 
 all: dirs $(LIB_NAME)
 
-$(LIB_NAME): rpiGpio.o rpiI2c.o
-	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(OUT_DIR)/rpiGpio.o $(OUT_DIR)/rpiI2c.o
+$(LIB_NAME): gpio.o i2c.o
+	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(OUT_DIR)/gpio.o $(OUT_DIR)/i2c.o
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -o $(OUT_DIR)/$@ -c $<

@@ -3,8 +3,8 @@ AR=ar
 CCFLAGS=-Wall -Werror -g -I../include
 LD_FLAGS=--static -L$(LIB_PATH) 
 
-LIB_BASE_NAME=RpiGpio
-LIB_NAME=libRpiGpio.a
+LIB_BASE_NAME=rpigpio
+LIB_NAME=librpigpio.a
 LIB_PATH=../library
 LIB_MAKE_PATH=../src
 

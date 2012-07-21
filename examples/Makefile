@@ -12,7 +12,10 @@ VPATH= $(LIB_PATH) $(OUTDIR)
 
 OUTDIR= output
 
-all: dirs gpio_example_output.exe gpio_example_input.exe
+all: dirs gpio_example_output.exe     \
+		  gpio_example_input.exe      \
+		  i2c_example_bitexpander.exe \
+		  i2c_example_eeprom.exe
 
 %.exe: %.c $(LIB_NAME)
 	$(CC) $(CCFLAGS) $(LD_FLAGS) -o $(OUTDIR)/$@ \

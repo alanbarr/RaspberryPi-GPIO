@@ -25,17 +25,10 @@
 
 #include "bcm2835_gpio.h"
 #include <stdio.h>                 
+#include <stdint.h>
 
-/** @brief The size the GPIO mapping is required to be.
- *  @details GPPUDCLK1_OFFSET is the last register offset of interest. */
-#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET) 
-
-/** @brief Number of GPIO pins which are available on the Raspberry Pi. */
-#define NUMBER_GPIO                 17
-
-/** @brief Delay for changing pullup/pulldown resistors
- *  @details It should be at least 150 cycles which is 0.21 uS (1 / 700 MHz * 150). */
-#define RESISTOR_SLEEP_US           1
+/** Speed of the core clock core_clk */
+#define CORE_CLK_HZ                 250000000
 
 /** @brief The list of errors which may be returned from gpio functions. 
  *  @details Errors are defined within #ERROR(x). */
@@ -46,6 +39,12 @@
     ERROR(ERROR_RANGE)                  \
     ERROR(ERROR_NULL)                   \
     ERROR(ERROR_EXTERNAL)               \
+    ERROR(ERROR_NOT_INITIALISED)        \
+    ERROR(ERROR_ALREADY_INITIALISED)    \
+    ERROR(ERROR_I2C_NACK)               \
+    ERROR(ERROR_I2C)                    \
+    ERROR(ERROR_I2C_CLK_TIMEOUT)        \
+
 
 #undef  ERROR
 /** @brief Redefining to replace the macro with x. */
@@ -96,6 +95,16 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function);
 errStatus gpioSetPin(int gpioNumber, eState state);
 errStatus gpioReadPin(int gpioNumber, eState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
+
+
+errStatus gpioI2cSetup(void);
+errStatus gpioI2cCleanup(void);
+errStatus gpioI2cSetClock(int frequency);
+errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress);
+errStatus gpioI2cWriteData(const uint8_t * data, uint16_t dataLength);
+errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead);
+
+
 const char * gpioErrToString(errStatus error);
 int dbgPrint(FILE * stream, const char * file, int line, const char * format, ...);
 

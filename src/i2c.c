@@ -1,6 +1,6 @@
 /**
  * @file
- *  @brief Contains C source for the I2C functionality.
+ *  @brief I2C functionality.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
@@ -49,8 +49,6 @@
 */
 
 #include "rpiGpio.h"
-#include <stdarg.h>
-#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -171,9 +169,9 @@ errStatus gpioI2cSetup(void)
     }
 
     /* Default the I2C speed to 100 kHz */
-    else if ((rtn = gpioI2cSetClock(I2C_DEFAULT_FREQ_HZ)) != OK)
+    else if ((rtn = gpioI2cSetClockFreq(I2C_DEFAULT_FREQ_HZ)) != OK)
     {
-        dbgPrint(DBG_INFO, "gpioI2cSetClock() failed. %s", gpioErrToString(rtn));
+        dbgPrint(DBG_INFO, "gpioI2cSetClockFreq() failed. %s", gpioErrToString(rtn));
     }
 
     else
@@ -501,7 +499,7 @@ errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead)
  *                  #I2C_CLOCK_FREQ_MIN <= \p frequency <= #I2C_CLOCK_FREQ_MAX.
  * @param frequency Desired frequency in Hertz.
  * @return          An error from #errStatus */
-errStatus gpioI2cSetClock(int frequency)
+errStatus gpioI2cSetClockFreq(uint32_t frequency)
 {
     errStatus rtn = ERROR_DEFAULT;
 

@@ -1,6 +1,6 @@
 /**
  * @file
- *  @brief The main header file of the GPIO library.
+ *  @brief API header for GPIO library.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
@@ -61,7 +61,7 @@ typedef enum {
 typedef enum {
     low  = 0x0, /**< Pin low */
     high = 0x1  /**< Pin high */
-} eState;
+} ePinState;
 
 /** @brief The enum for possible pull resistors. */
 typedef enum {
@@ -69,6 +69,25 @@ typedef enum {
     pulldown    = GPPUD_PULLDOWN, /**< Pulldown resistor */
     pullup      = GPPUD_PULLUP    /**< Pullup resistor */
 } eResistor;
+
+/** @brief The modes available in the PWM controller */
+typedef enum {
+    pwmMode,        /**< PWM Mode */
+    serialiserMode  /**< Serialiser Mode */
+} ePwmMode;
+  
+/** @brief The submodes available in the PWM controller.
+ *  @details Only applicable when #ePwmMode is \p pwmMode. */
+typedef enum {
+    pwmAlgorithm,   /**< Data is spread evenly using an algorithm. */
+    msTransmission  /**< Data is grouped together in a clear mark/space */
+} ePwmSubMode;
+
+/** @brief Standard boolean enumerator. */
+typedef enum {
+    false = 0,  
+    true  = 1
+} bool;
 
 /** @brief The enum of pin functions available. 
  ** @details The enum values are equivalent to those in the data sheet. 
@@ -92,18 +111,26 @@ typedef enum {
 errStatus gpioSetup(void);
 errStatus gpioCleanup(void);
 errStatus gpioSetFunction(int gpioNumber, eFunction function);
-errStatus gpioSetPin(int gpioNumber, eState state);
-errStatus gpioReadPin(int gpioNumber, eState * state);
+errStatus gpioSetPin(int gpioNumber, ePinState state);
+errStatus gpioReadPin(int gpioNumber, ePinState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
 
 
 errStatus gpioI2cSetup(void);
 errStatus gpioI2cCleanup(void);
-errStatus gpioI2cSetClock(int frequency);
+errStatus gpioI2cSetClockFreq(uint32_t frequency);
 errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress);
 errStatus gpioI2cWriteData(const uint8_t * data, uint16_t dataLength);
 errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead);
 
+
+errStatus gpioPwmSetup(void);
+errStatus gpioPwmCleanup(void);
+errStatus gpioPwmSetClockFreq(uint32_t clockFreq);
+errStatus gpioPwmSetModes(ePwmMode mainMode, ePwmSubMode subMode);
+errStatus gpioPwmEnable(bool enable);
+errStatus gpioPwmSetData(uint32_t data);
+errStatus gpioPwmSetRange(uint32_t range);
 
 const char * gpioErrToString(errStatus error);
 int dbgPrint(FILE * stream, const char * file, int line, const char * format, ...);

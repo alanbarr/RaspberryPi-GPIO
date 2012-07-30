@@ -1,4 +1,8 @@
-RaspberryPi-GPIO - Basic GPIO and I2C control for the Raspberry Pi.
+RaspberryPi-GPIO
+Basic GPIO, I2C and PWM control for the Raspberry Pi.
+
+PWM - Not quite there yet!
+
 #################### DOCUMENTATION #####################
 There is more detailed Doxygen produced documentation available in:
 http://alanbarr.github.com/RaspberryPi-GPIO

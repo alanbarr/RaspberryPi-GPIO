@@ -1,6 +1,6 @@
 # This make file creates a library for the gpio pins.
 CC=gcc
-CCFLAGS=-Wall -Werror -g -I../include -I.
+CCFLAGS=-Wall -Werror -g -I../include -I. -Iinc -pedantic
 
 AR=ar
 ARFLAGS=-rcs
@@ -11,13 +11,16 @@ LIB_NAME=librpigpio.a
 
 VPATH= $(OUT_DIR) $(LIB_DIR)
 
+OBJS= gpio.o i2c.o pwm.o clocks.o
+OUT_OBJS=$(addprefix $(OUT_DIR)/,$(OBJS))
+
 all: dirs $(LIB_NAME)
 
-$(LIB_NAME): gpio.o i2c.o
-	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(OUT_DIR)/gpio.o $(OUT_DIR)/i2c.o
+$(LIB_NAME): $(OUT_OBJS)
+	$(AR) $(ARFLAGS) $(LIB_DIR)/$@ $^
 
-%.o: %.c
-	$(CC) $(CCFLAGS) -o $(OUT_DIR)/$@ -c $<
+$(OUT_DIR)/%.o: %.c
+	$(CC) $(CCFLAGS) -o $@ -c $<
 
 dirs:
 	test -d $(OUT_DIR) || mkdir $(OUT_DIR);

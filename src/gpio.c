@@ -1,6 +1,6 @@
 /**
  * @file
- *  @brief Contains source for the GPIO functionality.
+ *  @brief Basic GPIO functionality.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
  *  a C library for basic control of the Raspberry Pi's GPIO pins. 
@@ -217,7 +217,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
  * @param gpioNumber    The pin to set. 
  * @param state         The desired state of the pin.
  * @return              An error from #errStatus.*/
-errStatus gpioSetPin(int gpioNumber, eState state)
+errStatus gpioSetPin(int gpioNumber, ePinState state)
 { 
     errStatus rtn = ERROR_DEFAULT;
 
@@ -264,7 +264,7 @@ errStatus gpioSetPin(int gpioNumber, eState state)
  * @param[out] state    Pointer to the variable in which the GPIO pin state is 
  *                      returned.
  * @return              An error from #errStatus. */
-errStatus gpioReadPin(int gpioNumber, eState * state)
+errStatus gpioReadPin(int gpioNumber, ePinState * state)
 { 
     errStatus rtn = ERROR_DEFAULT;
 

@@ -38,7 +38,7 @@
 
 int main(void)
 {
-    eState state;
+    ePinState state;
     int ctr;
 
     if (gpioSetup() != OK)

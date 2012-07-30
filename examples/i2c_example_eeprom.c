@@ -65,7 +65,7 @@ int main(void)
     }
 
     /* Device supports 400 kHz I2C */
-    else if (gpioI2cSetClock(400000) != OK)
+    else if (gpioI2cSetClockFreq(400000) != OK)
     {
         dbgPrint(DBG_INFO, "gpioI2cSetClock failed.");
     }

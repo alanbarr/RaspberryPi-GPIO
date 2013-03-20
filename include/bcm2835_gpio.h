@@ -162,18 +162,17 @@
 #define BSC2_DEL                0x20805018 /**< BSC2 Data Delay Register Address */
 
 /**********************************************************************************/
-/* The following are offset address which can be used with a pointer to BSC0_BASE */
+/* The following are offset address which can be used with a pointer to a BASE    */
 /**********************************************************************************/
 
-#define BSC0_BASE           BSC0_C      /**< First BSC0 address of interest */
+#define BSC_C_OFFSET        0x00000000  /**< BSC Control offset from BSCx_BASE */
+#define BSC_S_OFFSET        0x00000004  /**< BSC Status offset from BSCx_BASE */
+#define BSC_DLEN_OFFSET     0x00000008  /**< BSC Data Length offset from BSCx_BASE */
+#define BSC_A_OFFSET        0x0000000C  /**< BSC Slave Address offset from BSCx_BASE */
+#define BSC_FIFO_OFFSET     0x00000010  /**< BSC Data FIFO offset from BSCx_BASE */
+#define BSC_DIV_OFFSET      0x00000014  /**< BSC Clock Divider offset from BSCx_BASE */
+#define BSC_DEL_OFFSET      0x00000018  /**< BSC Data Delay offset from BSCx_BASE */
 
-#define BSC0_C_OFFSET       0x00000000  /**< BSC0 Control offset from BSC0_BASE */
-#define BSC0_S_OFFSET       0x00000004  /**< BSC0 Status offset from BSC0_BASE */
-#define BSC0_DLEN_OFFSET    0x00000008  /**< BSC0 Data Length offset from BSC0_BASE */
-#define BSC0_A_OFFSET       0x0000000C  /**< BSC0 Slave Address offset from BSC0_BASE */
-#define BSC0_FIFO_OFFSET    0x00000010  /**< BSC0 Data FIFO offset from BSC0_BASE */
-#define BSC0_DIV_OFFSET     0x00000014  /**< BSC0 Clock Divider offset from BSC0_BASE */
-#define BSC0_DEL_OFFSET     0x00000018  /**< BSC0 Data Delay offset from BSC0_BASE */
 
 /**********************************************************************************/
 /* The following are the BSC Control Register Bits                                */

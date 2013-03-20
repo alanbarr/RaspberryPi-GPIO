@@ -44,6 +44,7 @@
     ERROR(ERROR_I2C_NACK)               \
     ERROR(ERROR_I2C)                    \
     ERROR(ERROR_I2C_CLK_TIMEOUT)        \
+    ERROR(ERROR_INVALID_BSC)        \
 
 
 #undef  ERROR
@@ -104,7 +105,7 @@ errStatus gpioReadPin(int gpioNumber, eState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
 
 
-errStatus gpioI2cSetup(void);
+errStatus gpioI2cSetup(int bsc);
 errStatus gpioI2cCleanup(void);
 errStatus gpioI2cSetClock(int frequency);
 errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress);

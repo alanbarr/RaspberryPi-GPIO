@@ -66,7 +66,7 @@
 #define SCL                         1
 
 /** @brief The size the I2C mapping is required to be. */
-#define I2C_MAP_SIZE                BSC0_DEL_OFFSET
+#define I2C_MAP_SIZE                BSC_DEL_OFFSET
 
 /** @brief Default I2C clock frequency (Hertz) */
 #define I2C_DEFAULT_FREQ_HZ         100000
@@ -83,30 +83,38 @@ static volatile uint32_t * gI2cMap = NULL;
 /** @brief The time it takes ideally transmit 1 byte with current I2C clock */
 static int i2cByteTxTime_ns; 
 
-/** @brief BSC0_C register */
-#define I2C_C                       *(gI2cMap + BSC0_C_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_DIV register */
-#define I2C_DIV                     *(gI2cMap + BSC0_DIV_OFFSET / sizeof(uint32_t)) 
-/** @brief BSC0_A register */
-#define I2C_A                       *(gI2cMap + BSC0_A_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_DLEN register */
-#define I2C_DLEN                    *(gI2cMap + BSC0_DLEN_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_S register */
-#define I2C_S                       *(gI2cMap + BSC0_S_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_FIFO register */
-#define I2C_FIFO                    *(gI2cMap + BSC0_FIFO_OFFSET / sizeof(uint32_t))
+/** @brief BSC_C register */
+#define I2C_C                       *(gI2cMap + BSC_C_OFFSET / sizeof(uint32_t))
+/** @brief BSC_DIV register */
+#define I2C_DIV                     *(gI2cMap + BSC_DIV_OFFSET / sizeof(uint32_t))
+/** @brief BSC_A register */
+#define I2C_A                       *(gI2cMap + BSC_A_OFFSET / sizeof(uint32_t))
+/** @brief BSC_DLEN register */
+#define I2C_DLEN                    *(gI2cMap + BSC_DLEN_OFFSET / sizeof(uint32_t))
+/** @brief BSC_S register */
+#define I2C_S                       *(gI2cMap + BSC_S_OFFSET / sizeof(uint32_t))
+/** @brief BSC_FIFO register */
+#define I2C_FIFO                    *(gI2cMap + BSC_FIFO_OFFSET / sizeof(uint32_t))
 
 
 /**
  * @brief   Initial setup of I2C functionality. 
  * @details gpioSetup() should be called prior to this.
  * @return  An error from #errStatus. */
-errStatus gpioI2cSetup(void)
+errStatus gpioI2cSetup(int bsc)
 {
+    off_t bsc_base[] = {
+        BSC0_C,
+        BSC1_C
+    };
     int mem_fd = 0; 
     errStatus rtn = ERROR_DEFAULT;
-    
-    if (gI2cMap != NULL)
+    if (bsc < 0 || bsc > 1)
+    {
+        dbgPrint(DBG_INFO, "BSC %d invalid.", bsc);
+        rtn = ERROR_INVALID_BSC;
+    }
+    else if (gI2cMap != NULL)
     {
         dbgPrint(DBG_INFO, "gpioI2cSetup was already called.");
         rtn = ERROR_ALREADY_INITIALISED;
@@ -124,7 +132,7 @@ errStatus gpioI2cSetup(void)
                                                   PROT_READ|PROT_WRITE,
                                                   MAP_SHARED,
                                                   mem_fd,
-                                                  BSC0_BASE)) == MAP_FAILED)
+                                                  bsc_base[bsc])) == MAP_FAILED)
     {
         dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;

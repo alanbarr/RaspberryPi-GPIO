@@ -50,6 +50,13 @@
 /** @brief Redefining to replace the macro with x. */
 #define ERROR(x) x,
 
+
+/** @brief Minimum I2C frequency (Hertz) */
+#define I2C_CLOCK_FREQ_MIN         10000
+
+/** @brief Maximum I2C frequency (Hertz) */
+#define I2C_CLOCK_FREQ_MAX         400000
+
 /** @brief The enum of possible errors returned from gpio functions.
  *  Errors themselves are defined in the macro #ERRORS. */
 typedef enum {

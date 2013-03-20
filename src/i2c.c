@@ -77,12 +77,6 @@
 /** @brief Clock pulses per I2C byte - 8 bits + ACK */
 #define CLOCKS_PER_BYTE             9
 
-/** @brief Minimum I2C frequency (Hertz) */
-#define I2C_CLOCK_FREQ_MIN         10000
-
-/** @brief Maximum I2C frequency (Hertz) */
-#define I2C_CLOCK_FREQ_MAX         400000
-
 /** @brief Pointer which will be mmap'd to the I2C memory in /dev/mem */
 static volatile uint32_t * gI2cMap = NULL;
 

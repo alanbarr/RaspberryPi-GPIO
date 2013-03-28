@@ -60,10 +60,10 @@
 #include <time.h>
 
 /** @brief Pin used for I2C data */
-#define SDA                         0
+#define SDA                         gpioGetI2cPin(sda)
 
 /** @brief Pin used for I2C clock */
-#define SCL                         1
+#define SCL                         gpioGetI2cPin(scl)
 
 /** @brief The size the I2C mapping is required to be. */
 #define I2C_MAP_SIZE                BSC_DEL_OFFSET

@@ -97,6 +97,17 @@ static volatile uint32_t * gGpioMap = NULL;
 /** @brief GPIO_GPPUDCLK0 register */
 #define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))
 
+
+/** List of all BCM2835 pins available through the Raspberry Pi header */
+const static int32_t gValidPins_rev1[] =
+  { 0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25};
+const static int32_t gValidPins_rev2[] =
+  { 2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27};
+const static size_t gValidPins_rev1_cnt = sizeof(gValidPins_rev1)/sizeof(gValidPins_rev1[0]);
+const static size_t gValidPins_rev2_cnt = sizeof(gValidPins_rev2)/sizeof(gValidPins_rev2[0]);
+
+const int32_t *pgValidPins = NULL;
+const size_t *pgValidPins_cnt = NULL;
 /**
  * @brief   Maps the memory used for GPIO access. This function must be called 
  *          prior to any of the other GPIO calls.
@@ -132,7 +143,58 @@ errStatus gpioSetup(void)
 
     else
     {
-        rtn = OK;
+        FILE* cpuinfo =fopen("/proc/cpuinfo", "r");
+        if (cpuinfo)
+          {
+            char* line = NULL;
+            ssize_t linelen;
+            size_t foo;
+
+            pgValidPins = NULL;
+            pgValidPins_cnt = NULL;
+
+            while (((linelen = getline(&line, &foo, cpuinfo)) >= 0) &&
+                    (pgValidPins == NULL))
+            {
+              if (strstr(line, "Revision") == line)
+                {
+                  char* rev = strstr(line, ":");
+                  if (rev)
+                    {
+                      long revision = strtol(rev + 1, NULL, 16);
+                      switch (revision)
+                        {
+                        case 2 ... 3:
+                          pgValidPins = gValidPins_rev1;
+                          pgValidPins_cnt = &gValidPins_rev1_cnt;
+                          break;
+                        case 4 ... 15:
+                          pgValidPins = gValidPins_rev2;
+                          pgValidPins_cnt = &gValidPins_rev2_cnt;
+                          break;
+                        default:
+                          break;
+                        } /* switch */
+                    }
+                }
+            } /* while */
+            if (pgValidPins)
+              rtn = OK;
+            else
+              {
+                dbgPrint(DBG_INFO, "did not find revision in cpuinfo.");
+                rtn = ERROR_EXTERNAL;
+              }
+
+            if (line)
+              free(line);
+            fclose(cpuinfo);
+          }
+        else
+          {
+            dbgPrint(DBG_INFO, "can't open /proc/cpuinfo. errno: %s.", strerror(errno));
+            rtn = ERROR_EXTERNAL;
+          }
     }
 
     return rtn;
@@ -435,24 +497,22 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
  * @return              An error from #errStatus. */
 static errStatus gpioValidatePin(int gpioNumber)
 {
-    errStatus rtn = ERROR_INVALID_PIN_NUMBER;
-    int index;
+  errStatus rtn = ERROR_INVALID_PIN_NUMBER;
+  int index;
 
-    /** List of all BCM2835 pins available through the Raspberry Pi header */
-    const static int32_t gValidPins[NUMBER_GPIO] = { 0, 1, 4, 7, 8, 9, 10, 11,
-                                                     14, 15, 17, 18, 21, 22, 23,
-                                                     24, 25};
-
-    for (index = 0; index < NUMBER_GPIO; index++)
+  if (pgValidPins && pgValidPins_cnt)
     {
-        if (gpioNumber == gValidPins[index])
+      for (index = 0; index < *pgValidPins_cnt; index++)
         {
-            rtn = OK;
-            break;
+          if (gpioNumber == pgValidPins[index])
+            {
+              rtn = OK;
+              break;
+            }
         }
     }
 
-    return rtn;
+  return rtn;
 }
 
 

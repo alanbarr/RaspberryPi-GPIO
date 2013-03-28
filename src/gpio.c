@@ -412,6 +412,43 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
     return rtn;
 }
 
+/**
+ * @brief                Get the corresponding I2C pin depending on the revision of the PI.
+ * @details              The different revisions of the PI have their I2C ports on different GPIO
+ *                       pins. Therefore an API function is required to set the resistors.
+ * @param pin            Which I2C to fetch.
+ * @return               -1 or a valid pin. */
+int gpioGetI2cPin(eI2cPin pin)
+{
+  int rtn = -1;
+
+  if (gGpioMap == NULL)
+  {
+     dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
+  }
+  else if (pgValidPins == NULL)
+    {
+      dbgPrint(DBG_INFO, "Initialization was not successful.");
+    }
+  else
+    {
+      switch (pin)
+        {
+        case sda:
+          rtn = pgValidPins[0];
+          break;
+        case scl:
+          rtn = pgValidPins[1];
+          break;
+        default:
+          dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", pin);
+          break;
+        }
+    }
+
+  return rtn;
+}
+
 
 #undef  ERROR
 /** Redefining to replace macro with x as a string, i.e. "x". For use in

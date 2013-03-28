@@ -95,6 +95,14 @@ typedef enum {
     eFunctionMax = GPFSEL_ALT3    /**< Maximum valid value for enum */
 } eFunction;
 
+/** @brief The enum of possible I2C pins.
+ ** @details There aren't any more possibilities than data and clock.
+ */
+typedef enum {
+  sda,
+  scl
+} eI2cPin;
+
 
 /* Function Prototypes */
 errStatus gpioSetup(void);
@@ -103,6 +111,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function);
 errStatus gpioSetPin(int gpioNumber, eState state);
 errStatus gpioReadPin(int gpioNumber, eState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
+int gpioGetI2cPin(eI2cPin);
 
 
 errStatus gpioI2cSetup(int bsc);

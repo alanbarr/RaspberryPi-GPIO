@@ -59,12 +59,6 @@
 #include <stdio.h>
 #include <time.h>
 
-/** @brief Pin used for I2C data */
-#define SDA                         gpioGetI2cPin(sda)
-
-/** @brief Pin used for I2C clock */
-#define SCL                         gpioGetI2cPin(scl)
-
 /** @brief The size the I2C mapping is required to be. */
 #define I2C_MAP_SIZE                BSC_DEL_OFFSET
 
@@ -108,7 +102,11 @@ errStatus gpioI2cSetup(int bsc)
         BSC1_C
     };
     int mem_fd = 0; 
+    int i2c_sda;
+    int i2c_scl;
     errStatus rtn = ERROR_DEFAULT;
+
+
     if (bsc < 0 || bsc > 1)
     {
         dbgPrint(DBG_INFO, "BSC %d invalid.", bsc);
@@ -145,28 +143,40 @@ errStatus gpioI2cSetup(int bsc)
         rtn = ERROR_EXTERNAL;
     }
 
+    else if ((rtn = gpioGetI2cPin(sda, &i2c_sda)) != OK)
+    {
+        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SDA. %s",
+                 gpioErrToString(rtn));
+    }
+
+    else if ((rtn = gpioGetI2cPin(scl, &i2c_scl)) != OK)
+    {
+        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SCL. %s",
+                 gpioErrToString(rtn));
+    }
+
     /* There are external Pullup resistors on the Pi. Disable the internals */
-    else if ((rtn = gpioSetPullResistor(SDA, pullDisable)) != OK)
+    else if ((rtn = gpioSetPullResistor(i2c_sda, pullDisable)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetPullResistor() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
-    else if ((rtn = gpioSetPullResistor(SCL, pullDisable)) != OK)
+    else if ((rtn = gpioSetPullResistor(i2c_scl, pullDisable)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetPullResistor() failed for SCL. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SDA pin to alternate function 0 for I2C */
-    else if ((rtn = gpioSetFunction(SDA, alt0)) != OK)
+    else if ((rtn = gpioSetFunction(i2c_sda, alt0)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SCL pin to alternate function 0 for I2C */
-    else if ((rtn = gpioSetFunction(SCL, alt0)) != OK)
+    else if ((rtn = gpioSetFunction(i2c_scl, alt0)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SCL. %s",
                 gpioErrToString(rtn));
@@ -205,22 +215,36 @@ errStatus gpioI2cSetup(int bsc)
 errStatus gpioI2cCleanup(void)
 {    
     errStatus rtn = ERROR_DEFAULT;
+    int i2c_sda;
+    int i2c_scl;
 
     if (gI2cMap == NULL)
     {
         dbgPrint(DBG_INFO, "gI2cMap was NULL. Ensure gpioI2cSetup() was called successfully.");
         rtn = ERROR_NOT_INITIALISED;
     }
+
+    else if ((rtn = gpioGetI2cPin(sda, &i2c_sda)) != OK)
+    {
+        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SDA. %s",
+                 gpioErrToString(rtn));
+    }
+
+    else if ((rtn = gpioGetI2cPin(scl, &i2c_scl)) != OK)
+    {
+        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SCL. %s",
+                 gpioErrToString(rtn));
+    }
  
     /* Set SDA pin to input */
-    else if ((rtn = gpioSetFunction(SDA, input)) != OK)
+    else if ((rtn = gpioSetFunction(i2c_sda, input)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SCL pin to input */
-    else if ((rtn = gpioSetFunction(SCL, input)) != OK)
+    else if ((rtn = gpioSetFunction(i2c_scl, input)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SCL. %s",
                 gpioErrToString(rtn));

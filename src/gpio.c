@@ -228,6 +228,8 @@ errStatus gpioCleanup(void)
     else
     {
         gGpioMap = NULL;
+        pgValidPins = NULL;
+        pgValidPins_cnt = NULL;
         rtn = OK;
     }
     return rtn;
@@ -339,7 +341,13 @@ errStatus gpioReadPin(int gpioNumber, eState * state)
         dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
         rtn = ERROR_NULL;
     }
-    
+
+    else if (state == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter state was NULL.");
+        rtn = ERROR_NULL;
+    }
+
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioValidatePin() failed. Pin %d isn't valid.", gpioNumber);

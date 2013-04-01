@@ -117,12 +117,12 @@ errStatus gpioSetup(void)
     int mem_fd = 0;
     errStatus rtn = ERROR_DEFAULT;
 
-    if ((mem_fd = open("/dev/mem", O_RDWR)) < 0) 
+    if ((mem_fd = open("/dev/mem", O_RDWR)) < 0)
     {
         dbgPrint(DBG_INFO, "open() failed. /dev/mem. errno %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
- 
+
     else if ((gGpioMap = (volatile uint32_t *)mmap(NULL,
                                                    GPIO_MAP_SIZE,
                                                    PROT_READ|PROT_WRITE,
@@ -133,7 +133,7 @@ errStatus gpioSetup(void)
         dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
-    
+
     /* Close the fd, we have now mapped it */
     else if (close(mem_fd) != OK)
     {
@@ -143,9 +143,9 @@ errStatus gpioSetup(void)
 
     else
     {
-        FILE* cpuinfo =fopen("/proc/cpuinfo", "r");
+        FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
         if (cpuinfo)
-          {
+        {
             char* line = NULL;
             ssize_t linelen;
             size_t foo;
@@ -156,45 +156,49 @@ errStatus gpioSetup(void)
             while (((linelen = getline(&line, &foo, cpuinfo)) >= 0) &&
                     (pgValidPins == NULL))
             {
-              if (strstr(line, "Revision") == line)
+                if (strstr(line, "Revision") == line)
                 {
-                  char* rev = strstr(line, ":");
-                  if (rev)
+                    char* rev = strstr(line, ":");
+                    if (rev)
                     {
-                      long revision = strtol(rev + 1, NULL, 16);
-                      switch (revision)
+                        long revision = strtol(rev + 1, NULL, 16);
+                        switch (revision)
                         {
-                        case 2 ... 3:
-                          pgValidPins = gValidPins_rev1;
-                          pgValidPins_cnt = &gValidPins_rev1_cnt;
-                          break;
-                        case 4 ... 15:
-                          pgValidPins = gValidPins_rev2;
-                          pgValidPins_cnt = &gValidPins_rev2_cnt;
-                          break;
-                        default:
-                          break;
+                            case 2 ... 3:
+                                pgValidPins = gValidPins_rev1;
+                                pgValidPins_cnt = &gValidPins_rev1_cnt;
+                                break;
+                            case 4 ... 15:
+                                pgValidPins = gValidPins_rev2;
+                                pgValidPins_cnt = &gValidPins_rev2_cnt;
+                                break;
+                            default:
+                                break;
                         } /* switch */
                     }
                 }
             } /* while */
             if (pgValidPins)
-              rtn = OK;
+            {
+                rtn = OK;
+            }
             else
-              {
+            {
                 dbgPrint(DBG_INFO, "did not find revision in cpuinfo.");
                 rtn = ERROR_EXTERNAL;
-              }
+            }
 
             if (line)
-              free(line);
+            {
+                free(line);
+            }
             fclose(cpuinfo);
-          }
+        }
         else
-          {
+        {
             dbgPrint(DBG_INFO, "can't open /proc/cpuinfo. errno: %s.", strerror(errno));
             rtn = ERROR_EXTERNAL;
-          }
+        }
     }
 
     return rtn;
@@ -420,33 +424,33 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
  * @return               -1 or a valid pin. */
 int gpioGetI2cPin(eI2cPin pin)
 {
-  int rtn = -1;
+    int rtn = -1;
 
-  if (gGpioMap == NULL)
-  {
-     dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
-  }
-  else if (pgValidPins == NULL)
+    if (gGpioMap == NULL )
     {
-      dbgPrint(DBG_INFO, "Initialization was not successful.");
+        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
     }
-  else
+    else if (pgValidPins == NULL )
     {
-      switch (pin)
+        dbgPrint(DBG_INFO, "Initialization was not successful.");
+    }
+    else
+    {
+        switch (pin)
         {
-        case sda:
-          rtn = pgValidPins[0];
-          break;
-        case scl:
-          rtn = pgValidPins[1];
-          break;
-        default:
-          dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", pin);
-          break;
+            case sda:
+                rtn = pgValidPins[0];
+                break;
+            case scl:
+                rtn = pgValidPins[1];
+                break;
+            default:
+                dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", pin);
+                break;
         }
     }
 
-  return rtn;
+    return rtn;
 }
 
 
@@ -534,22 +538,22 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
  * @return              An error from #errStatus. */
 static errStatus gpioValidatePin(int gpioNumber)
 {
-  errStatus rtn = ERROR_INVALID_PIN_NUMBER;
-  int index;
+    errStatus rtn = ERROR_INVALID_PIN_NUMBER;
+    int index;
 
-  if (pgValidPins && pgValidPins_cnt)
+    if (pgValidPins && pgValidPins_cnt)
     {
-      for (index = 0; index < *pgValidPins_cnt; index++)
+        for (index = 0; index < *pgValidPins_cnt; index++)
         {
-          if (gpioNumber == pgValidPins[index])
+            if (gpioNumber == pgValidPins[index])
             {
-              rtn = OK;
-              break;
+                rtn = OK;
+                break;
             }
         }
     }
 
-  return rtn;
+    return rtn;
 }
 
 

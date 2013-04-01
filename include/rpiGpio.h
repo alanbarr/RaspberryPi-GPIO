@@ -99,8 +99,8 @@ typedef enum {
  ** @details There aren't any more possibilities than data and clock.
  */
 typedef enum {
-  sda,
-  scl
+  sda = 0,
+  scl = 1
 } eI2cPin;
 
 
@@ -111,7 +111,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function);
 errStatus gpioSetPin(int gpioNumber, eState state);
 errStatus gpioReadPin(int gpioNumber, eState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
-int gpioGetI2cPin(eI2cPin);
+errStatus gpioGetI2cPin(eI2cPin i2cPin, int* pGpio);
 
 
 errStatus gpioI2cSetup(int bsc);

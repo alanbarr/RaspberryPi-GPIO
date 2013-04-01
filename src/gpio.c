@@ -421,31 +421,43 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
  * @details              The different revisions of the PI have their I2C ports on different GPIO
  *                       pins. Therefore an API function is required to set the resistors.
  * @param pin            Which I2C to fetch.
- * @return               -1 or a valid pin. */
-int gpioGetI2cPin(eI2cPin pin)
+ * @param pGpio[out]     Pointer to the variable in which the GPIO pin of the I2C port is
+ *                       returned.
+ * @return               An error from #errStatus. */
+errStatus gpioGetI2cPin(eI2cPin i2cPin, int* pGpio)
 {
-    int rtn = -1;
+    errStatus rtn = ERROR_DEFAULT;
 
-    if (gGpioMap == NULL )
+    if (gGpioMap == NULL)
     {
         dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
+        rtn = ERROR_NULL;
     }
-    else if (pgValidPins == NULL )
+
+    else if (pGpio == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter pGpio is NULL.");
+        rtn = ERROR_NULL;
+    }
+
+    else if (pgValidPins == NULL)
     {
         dbgPrint(DBG_INFO, "Initialization was not successful.");
+        rtn = ERROR_NULL;
     }
+
     else
     {
-        switch (pin)
+        switch (i2cPin)
         {
             case sda:
-                rtn = pgValidPins[0];
-                break;
             case scl:
-                rtn = pgValidPins[1];
+                *pGpio = pgValidPins[i2cPin];
+                rtn = OK;
                 break;
             default:
-                dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", pin);
+                dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", i2cPin);
+                rtn = ERROR_INVALID_PIN_NUMBER;
                 break;
         }
     }

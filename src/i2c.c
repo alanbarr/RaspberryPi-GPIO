@@ -66,7 +66,7 @@
 #define SCL                         1
 
 /** @brief The size the I2C mapping is required to be. */
-#define I2C_MAP_SIZE                BSC0_DEL_OFFSET
+#define I2C_MAP_SIZE                BSC1_DEL_OFFSET
 
 /** @brief Default I2C clock frequency (Hertz) */
 #define I2C_DEFAULT_FREQ_HZ         100000
@@ -89,18 +89,18 @@ static volatile uint32_t * gI2cMap = NULL;
 /** @brief The time it takes ideally transmit 1 byte with current I2C clock */
 static int i2cByteTxTime_ns; 
 
-/** @brief BSC0_C register */
-#define I2C_C                       *(gI2cMap + BSC0_C_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_DIV register */
-#define I2C_DIV                     *(gI2cMap + BSC0_DIV_OFFSET / sizeof(uint32_t)) 
-/** @brief BSC0_A register */
-#define I2C_A                       *(gI2cMap + BSC0_A_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_DLEN register */
-#define I2C_DLEN                    *(gI2cMap + BSC0_DLEN_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_S register */
-#define I2C_S                       *(gI2cMap + BSC0_S_OFFSET / sizeof(uint32_t))
-/** @brief BSC0_FIFO register */
-#define I2C_FIFO                    *(gI2cMap + BSC0_FIFO_OFFSET / sizeof(uint32_t))
+/** @brief BSC1_C register */
+#define I2C_C                       *(gI2cMap + BSC1_C_OFFSET / sizeof(uint32_t))
+/** @brief BSC1_DIV register */
+#define I2C_DIV                     *(gI2cMap + BSC1_DIV_OFFSET / sizeof(uint32_t)) 
+/** @brief BSC1_A register */
+#define I2C_A                       *(gI2cMap + BSC1_A_OFFSET / sizeof(uint32_t))
+/** @brief BSC1_DLEN register */
+#define I2C_DLEN                    *(gI2cMap + BSC1_DLEN_OFFSET / sizeof(uint32_t))
+/** @brief BSC1_S register */
+#define I2C_S                       *(gI2cMap + BSC1_S_OFFSET / sizeof(uint32_t))
+/** @brief BSC1_FIFO register */
+#define I2C_FIFO                    *(gI2cMap + BSC1_FIFO_OFFSET / sizeof(uint32_t))
 
 
 /**
@@ -130,7 +130,7 @@ errStatus gpioI2cSetup(void)
                                                   PROT_READ|PROT_WRITE,
                                                   MAP_SHARED,
                                                   mem_fd,
-                                                  BSC0_BASE)) == MAP_FAILED)
+                                                  BSC1_BASE)) == MAP_FAILED)
     {
         dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;

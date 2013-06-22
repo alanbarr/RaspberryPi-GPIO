@@ -95,15 +95,6 @@ typedef enum {
     eFunctionMax = GPFSEL_ALT3    /**< Maximum valid value for enum */
 } eFunction;
 
-/** @brief The enum of possible I2C pins.
- ** @details There aren't any more possibilities than data and clock.
- */
-typedef enum {
-  sda = 0,
-  scl = 1
-} eI2cPin;
-
-
 /* Function Prototypes */
 errStatus gpioSetup(void);
 errStatus gpioCleanup(void);
@@ -111,21 +102,49 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function);
 errStatus gpioSetPin(int gpioNumber, eState state);
 errStatus gpioReadPin(int gpioNumber, eState * state);
 errStatus gpioSetPullResistor(int gpioNumber, eResistor resistor);
-errStatus gpioGetI2cPin(eI2cPin i2cPin, int* pGpio);
+errStatus gpioGetI2cPins(int * gpioNumberScl, int * gpioNumberSda);
 
-
-errStatus gpioI2cSetup(int bsc);
+errStatus gpioI2cSetup(void);
 errStatus gpioI2cCleanup(void);
 errStatus gpioI2cSetClock(int frequency);
 errStatus gpioI2cSet7BitSlave(uint8_t slaveAddress);
 errStatus gpioI2cWriteData(const uint8_t * data, uint16_t dataLength);
 errStatus gpioI2cReadData(uint8_t * buffer, uint16_t bytesToRead);
 
-
 const char * gpioErrToString(errStatus error);
 int dbgPrint(FILE * stream, const char * file, int line, const char * format, ...);
 
 /** @brief Macro which covers the first three arguments of dbgPrint. */
 #define DBG_INFO stderr,__FILE__,__LINE__
+
+
+/* Revision specific TODO not sure if it should be public maybe private revisions
+ * header?*/
+/** @brief Pin count on a PCB rev1 Raspberry Pi */
+#define REV1_PINCNT 17
+/** @brief Pin count on a PCB rev2 Raspberry Pi */
+#define REV2_PINCNT 17
+
+/** @ brief List of all BCM2835 pins available through the rev1 Raspberry Pi header */
+#define REV1_PINS {0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25}
+/** @ brief List of all BCM2835 pins available through the rev2 Raspberry Pi header */
+#define REV2_PINS {2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27}
+
+/** @brief The BCM2835 pin number of SDA on rev1 Raspberry Pi */
+#define REV1_SDA 0
+/** @brief The BCM2835 pin number of SCL on rev1 Raspberry Pi */
+#define REV1_SCL 1
+/** @brief The BCM2835 pin number of SDA on rev2 Raspberry Pi */
+#define REV2_SDA 2
+/** @brief The BCM2835 pin number of SCL on rev2 Raspberry Pi */
+#define REV2_SCL 3
+
+/** @brief valid PCB revision values */
+typedef enum {
+    pcbRevError = 0,
+    pcbRev1 = 1,
+    pcbRev2 = 2,
+} tPcbRev;
+
 
 #endif /* _RPI_GPIO_H_ */

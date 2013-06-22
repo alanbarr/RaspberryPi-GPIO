@@ -19,35 +19,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *
- * @page i2c I2C (BSC)
- *  "The Broadcom Serial Controller (BSC) controller is a master, fast-mode
- *  (400Kb/s) BSC controller. The Broadcom Serial Control bus is a proprietary
- *  bus compliant with the Philips® I2C bus/interface version 2.1 January 2000."
- *  BCM2835 ARM Peripherals
- *
- *  @section i2c_pinout I2C Pins
- *  The Raspberry Pi has I2C functionality available at GPIO00, SDA and
- *  GPI01, SCL.
- *  <pre>
- *           _______
- *  3V3    |  1  2 | 5V
- *  SDA    |  3  4 | DNC
- *  SCL    |  5  6 | GND
- *  GPIO04 |  7  8 | GPIO14
- *  DNC    |  9 10 | GPIO15
- *  GPIO17 | 11 12 | GPIO18
- *  GPIO21 | 13 14 | DNC
- *  GPIO22 | 15 16 | GPIO23
- *  DNC    | 17 18 | GPIO24
- *  GPIO10 | 19 20 | DNC
- *  GPIO09 | 21 22 | GPIO25
- *  GPIO11 | 23 24 | GPIO08
- *  DNC    | 25 26 | GPIO07
- *          _______
- *  </pre>
-*/
+ */
 
+/* TODO the following has grown enough it requires its own private header */
 #include "rpiGpio.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -92,26 +66,41 @@ static int i2cByteTxTime_ns;
 
 
 /**
- * @brief   Initial setup of I2C functionality.
- * @details gpioSetup() should be called prior to this.
- * @return  An error from #errStatus. */
-errStatus gpioI2cSetup(int bsc)
+ * @brief       Initial setup of I2C functionality.
+ * @details     gpioSetup() should be called prior to this.
+ * @return      An error from #errStatus. */
+errStatus gpioI2cSetup(void)
 {
-    off_t bsc_base[] = {
-        BSC0_C,
-        BSC1_C
-    };
     int mem_fd = 0;
-    int i2c_sda;
-    int i2c_scl;
+    int sda;
+    int scl;
     errStatus rtn = ERROR_DEFAULT;
+    off_t bscBase;
 
-
-    if (bsc < 0 || bsc > 1)
+    if ((rtn = gpioGetI2cPins(&scl, &sda)) != OK)
     {
-        dbgPrint(DBG_INFO, "BSC %d invalid.", bsc);
-        rtn = ERROR_INVALID_BSC;
+        dbgPrint(DBG_INFO, "gpioGetI2cPins() failed. %s", gpioErrToString(rtn));
     }
+
+    /* Find the correct BSC to use from I2C pins */
+    else if (sda == REV1_SDA && scl == REV1_SCL)
+    {
+        bscBase = BSC0_BASE;
+    }
+    else if (sda == REV2_SDA && scl == REV2_SCL)
+    {
+        bscBase = BSC1_BASE;
+    }
+    else 
+    {
+        rtn = ERROR_INVALID_PIN_NUMBER;
+    }
+
+    if (rtn != OK)
+    {
+        dbgPrint(DBG_INFO, "Return was not OK. %s", gpioErrToString(rtn));
+    }
+
     else if (gI2cMap != NULL)
     {
         dbgPrint(DBG_INFO, "gpioI2cSetup was already called.");
@@ -130,7 +119,7 @@ errStatus gpioI2cSetup(int bsc)
                                                   PROT_READ|PROT_WRITE,
                                                   MAP_SHARED,
                                                   mem_fd,
-                                                  bsc_base[bsc])) == MAP_FAILED)
+                                                  bscBase)) == MAP_FAILED)
     {
         dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
@@ -143,40 +132,28 @@ errStatus gpioI2cSetup(int bsc)
         rtn = ERROR_EXTERNAL;
     }
 
-    else if ((rtn = gpioGetI2cPin(sda, &i2c_sda)) != OK)
-    {
-        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SDA. %s",
-                 gpioErrToString(rtn));
-    }
-
-    else if ((rtn = gpioGetI2cPin(scl, &i2c_scl)) != OK)
-    {
-        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SCL. %s",
-                 gpioErrToString(rtn));
-    }
-
     /* There are external Pullup resistors on the Pi. Disable the internals */
-    else if ((rtn = gpioSetPullResistor(i2c_sda, pullDisable)) != OK)
+    else if ((rtn = gpioSetPullResistor(sda, pullDisable)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetPullResistor() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
-    else if ((rtn = gpioSetPullResistor(i2c_scl, pullDisable)) != OK)
+    else if ((rtn = gpioSetPullResistor(scl, pullDisable)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetPullResistor() failed for SCL. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SDA pin to alternate function 0 for I2C */
-    else if ((rtn = gpioSetFunction(i2c_sda, alt0)) != OK)
+    else if ((rtn = gpioSetFunction(sda, alt0)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SCL pin to alternate function 0 for I2C */
-    else if ((rtn = gpioSetFunction(i2c_scl, alt0)) != OK)
+    else if ((rtn = gpioSetFunction(scl, alt0)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SCL. %s",
                 gpioErrToString(rtn));
@@ -215,8 +192,8 @@ errStatus gpioI2cSetup(int bsc)
 errStatus gpioI2cCleanup(void)
 {
     errStatus rtn = ERROR_DEFAULT;
-    int i2c_sda;
-    int i2c_scl;
+    int sda;
+    int scl;
 
     if (gI2cMap == NULL)
     {
@@ -224,27 +201,21 @@ errStatus gpioI2cCleanup(void)
         rtn = ERROR_NOT_INITIALISED;
     }
 
-    else if ((rtn = gpioGetI2cPin(sda, &i2c_sda)) != OK)
+    else if ((rtn = gpioGetI2cPins(&scl, &sda)) != OK)
     {
-        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SDA. %s",
-                 gpioErrToString(rtn));
-    }
-
-    else if ((rtn = gpioGetI2cPin(scl, &i2c_scl)) != OK)
-    {
-        dbgPrint(DBG_INFO, "gpioGetI2cPin() failed for SCL. %s",
+        dbgPrint(DBG_INFO, "gpioGetI2cPins() failed. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SDA pin to input */
-    else if ((rtn = gpioSetFunction(i2c_sda, input)) != OK)
+    else if ((rtn = gpioSetFunction(sda, input)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SDA. %s",
                  gpioErrToString(rtn));
     }
 
     /* Set SCL pin to input */
-    else if ((rtn = gpioSetFunction(i2c_scl, input)) != OK)
+    else if ((rtn = gpioSetFunction(scl, input)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioSetFunction() failed for SCL. %s",
                 gpioErrToString(rtn));

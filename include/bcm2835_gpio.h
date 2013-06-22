@@ -162,9 +162,16 @@
 #define BSC2_DEL                0x20805018 /**< BSC2 Data Delay Register Address */
 
 /**********************************************************************************/
-/* The following are offset address which can be used with a pointer to a BASE    */
+/* The following are the base addresses for each BSC module                       */
 /**********************************************************************************/
+#define BSC0_BASE           BSC0_C      /**< BSC0 Base Address */
+#define BSC1_BASE           BSC1_C      /**< BSC1 Base Address */
+#define BSC2_BASE           BSC2_C      /**< BSC2 Base Address */
 
+/**********************************************************************************/
+/* The following are offset addresses which can be used with a pointer to the
+ * appropriate BSC base */
+/**********************************************************************************/
 #define BSC_C_OFFSET        0x00000000  /**< BSC Control offset from BSCx_BASE */
 #define BSC_S_OFFSET        0x00000004  /**< BSC Status offset from BSCx_BASE */
 #define BSC_DLEN_OFFSET     0x00000008  /**< BSC Data Length offset from BSCx_BASE */

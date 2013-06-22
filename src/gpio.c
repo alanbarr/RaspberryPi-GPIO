@@ -23,40 +23,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @page gpio GPIO
- * @section gpio_pins GPIO Pins
- *
- * @attention Take care when wiring up any GPIO pin. Doing so incorrectly could
- *            potentially do damage for instance shorting out a positive rail
- *            and ground.
- *
- * @subsection gpio_pins_layout Layout
- *  Pin 1 should be labeled such on the PCB and should also be the closest pin to
- *  the SD card.
- *  <pre>
- *           _______
- *  3V3    |  1  2 | 5V
- *  GPIO00 |  3  4 | DNC
- *  GPIO01 |  5  6 | GND
- *  GPIO04 |  7  8 | GPIO14
- *  DNC    |  9 10 | GPIO15
- *  GPIO17 | 11 12 | GPIO18
- *  GPIO21 | 13 14 | DNC
- *  GPIO22 | 15 16 | GPIO23
- *  DNC    | 17 18 | GPIO24
- *  GPIO10 | 19 20 | DNC
- *  GPIO09 | 21 22 | GPIO25
- *  GPIO11 | 23 24 | GPIO08
- *  DNC    | 25 26 | GPIO07
- *          _______
- *  </pre>
- *
- * @subsection gpio_pins_numbering Numbering
- *  All references to GPIO pin numbering is this code refers to the pin number
- *  as it is on the BCM2835 chip, i.e. in the diagram above GPIOxx. This is
- *  notably different from the physical pin layout on the Raspberry Pi.
  */
 
+/* TODO the following has grown enough it requires its own private header */
 #include "rpiGpio.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -79,13 +48,6 @@
  ** cycles which is 0.6 uS (1 / 250 MHz * 150).  (250 Mhz is the core clock)*/
 #define RESISTOR_SLEEP_US           1
 
-/* Local / internal prototypes */
-static errStatus gpioValidatePin(int gpioNumber);
-
-/**** Globals ****/
-/** @brief Pointer which will be mmap'd to the GPIO memory in /dev/mem */
-static volatile uint32_t * gGpioMap = NULL;
-
 /** @brief GPSET_0 register */
 #define GPIO_GPSET0     *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t))
 /** @brief GPIO_GPCLR0 register */
@@ -97,17 +59,16 @@ static volatile uint32_t * gGpioMap = NULL;
 /** @brief GPIO_GPPUDCLK0 register */
 #define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))
 
+/* Local / internal prototypes */
+static errStatus gpioValidatePin(int gpioNumber);
 
-/** List of all BCM2835 pins available through the Raspberry Pi header */
-const static int32_t gValidPins_rev1[] =
-  { 0, 1, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 21, 22, 23, 24, 25};
-const static int32_t gValidPins_rev2[] =
-  { 2, 3, 4, 7, 8, 9, 10, 11, 14, 15, 17, 18, 22, 23, 24, 25, 27};
-const static size_t gValidPins_rev1_cnt = sizeof(gValidPins_rev1)/sizeof(gValidPins_rev1[0]);
-const static size_t gValidPins_rev2_cnt = sizeof(gValidPins_rev2)/sizeof(gValidPins_rev2[0]);
+/**** Globals ****/
+/** @brief Pointer which will be mmap'd to the GPIO memory in /dev/mem */
+static volatile uint32_t * gGpioMap = NULL;
 
-const int32_t *pgValidPins = NULL;
-const size_t *pgValidPins_cnt = NULL;
+/** @brief PCB revision that executable is being run on */
+static tPcbRev pcbRev = pcbRevError;
+
 /**
  * @brief   Maps the memory used for GPIO access. This function must be called
  *          prior to any of the other GPIO calls.
@@ -150,11 +111,7 @@ errStatus gpioSetup(void)
             ssize_t linelen;
             size_t foo;
 
-            pgValidPins = NULL;
-            pgValidPins_cnt = NULL;
-
-            while (((linelen = getline(&line, &foo, cpuinfo)) >= 0) &&
-                    (pgValidPins == NULL))
+            while (((linelen = getline(&line, &foo, cpuinfo)) >= 0))
             {
                 if (strstr(line, "Revision") == line)
                 {
@@ -165,12 +122,10 @@ errStatus gpioSetup(void)
                         switch (revision)
                         {
                             case 2 ... 3:
-                                pgValidPins = gValidPins_rev1;
-                                pgValidPins_cnt = &gValidPins_rev1_cnt;
+                                pcbRev = pcbRev1;
                                 break;
                             case 4 ... 15:
-                                pgValidPins = gValidPins_rev2;
-                                pgValidPins_cnt = &gValidPins_rev2_cnt;
+                                pcbRev = pcbRev2;
                                 break;
                             default:
                                 break;
@@ -178,7 +133,7 @@ errStatus gpioSetup(void)
                     }
                 }
             } /* while */
-            if (pgValidPins)
+            if (pcbRev != pcbRevError)
             {
                 rtn = OK;
             }
@@ -228,8 +183,6 @@ errStatus gpioCleanup(void)
     else
     {
         gGpioMap = NULL;
-        pgValidPins = NULL;
-        pgValidPins_cnt = NULL;
         rtn = OK;
     }
     return rtn;
@@ -425,14 +378,15 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
 }
 
 /**
- * @brief                Get the corresponding I2C pin depending on the revision of the PI.
- * @details              The different revisions of the PI have their I2C ports on different GPIO
- *                       pins. Therefore an API function is required to set the resistors.
- * @param pin            Which I2C to fetch.
- * @param pGpio[out]     Pointer to the variable in which the GPIO pin of the I2C port is
- *                       returned.
- * @return               An error from #errStatus. */
-errStatus gpioGetI2cPin(eI2cPin i2cPin, int* pGpio)
+ * @brief                       Get the correct I2C pins.
+ * @details                     The different revisions of the PI have their I2C
+ *                              ports on different GPIO
+ *                              pins which require different BSC modules.
+ * @param[out] gpioNumberScl    Integer to be populated with scl gpio number.
+ * @param[out] gpioNumberSda    Integer to be populated with sda gpio number.
+ * @todo TODO                   Does this need to be public or internal only?
+ * @return                      An error from #errStatus. */
+errStatus gpioGetI2cPins(int * gpioNumberScl, int * gpioNumberSda)
 {
     errStatus rtn = ERROR_DEFAULT;
 
@@ -442,32 +396,30 @@ errStatus gpioGetI2cPin(eI2cPin i2cPin, int* pGpio)
         rtn = ERROR_NULL;
     }
 
-    else if (pGpio == NULL)
+    else if (gpioNumberScl == NULL)
     {
-        dbgPrint(DBG_INFO, "Parameter pGpio is NULL.");
+        dbgPrint(DBG_INFO, "Parameter gpioNumberScl is NULL.");
+        rtn = ERROR_NULL;
+    }
+    
+    else if (gpioNumberSda == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter gpioNumberSda is NULL.");
         rtn = ERROR_NULL;
     }
 
-    else if (pgValidPins == NULL)
+    else if (pcbRev == pcbRev1)
     {
-        dbgPrint(DBG_INFO, "Initialization was not successful.");
-        rtn = ERROR_NULL;
+        *gpioNumberScl = REV1_SCL;
+        *gpioNumberSda = REV1_SDA;
+        rtn = OK;
     }
 
-    else
+    else if (pcbRev == pcbRev2)
     {
-        switch (i2cPin)
-        {
-            case sda:
-            case scl:
-                *pGpio = pgValidPins[i2cPin];
-                rtn = OK;
-                break;
-            default:
-                dbgPrint(DBG_INFO, "I2C pin: %d is invalid.", i2cPin);
-                rtn = ERROR_INVALID_PIN_NUMBER;
-                break;
-        }
+        *gpioNumberScl = REV2_SCL;
+        *gpioNumberSda = REV2_SDA;
+        rtn = OK;
     }
 
     return rtn;
@@ -554,22 +506,47 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
 /**
  * @brief               Internal function which Validates that the pin
  *                      \p gpioNumber is valid for the Raspberry Pi.
+ * @details             The first time this function is called it will perform
+ *                      some basic initalisation on internal variables.
  * @param gpioNumber    The pin number to check.
  * @return              An error from #errStatus. */
 static errStatus gpioValidatePin(int gpioNumber)
 {
     errStatus rtn = ERROR_INVALID_PIN_NUMBER;
-    int index;
+    int index = 0;
+    /* TODO REV1 and REV2 have the same pincount. REV2 technically has more if 
+     * P5 is supported. If there is a REV3 the size of this array will need to
+     * be addressed. */
+    static uint32_t validPins[REV2_PINCNT] = {0};
+    static uint32_t pinCnt = 0;
 
-    if (pgValidPins && pgValidPins_cnt)
+    if (pinCnt == 0)
     {
-        for (index = 0; index < *pgValidPins_cnt; index++)
+        if (pcbRev == pcbRevError)
         {
-            if (gpioNumber == pgValidPins[index])
-            {
-                rtn = OK;
-                break;
-            }
+            rtn = ERROR_RANGE;
+        }
+
+        else if (pcbRev == pcbRev1)
+        {
+            const uint32_t validPinsForRev1[REV1_PINCNT] = REV1_PINS;
+            memcpy(validPins, validPinsForRev1, sizeof(validPinsForRev1));
+            pinCnt = REV1_PINCNT;
+        }
+        else if (pcbRev == pcbRev2)
+        {
+            const uint32_t validPinsForRev2[REV2_PINCNT] = REV2_PINS;
+            memcpy(validPins, validPinsForRev2, sizeof(validPinsForRev2));
+            pinCnt = REV2_PINCNT;
+        }
+    }
+
+    for (index = 0; index < pinCnt; index++)
+    {
+        if (gpioNumber == validPins[index])
+        {
+            rtn = OK;
+            break;
         }
     }
 

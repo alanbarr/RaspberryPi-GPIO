@@ -119,17 +119,16 @@ errStatus gpioSetup(void)
                     if (rev)
                     {
                         long revision = strtol(rev + 1, NULL, 16);
-                        switch (revision)
+
+                        if (revision <= 3)
                         {
-                            case 2 ... 3:
-                                pcbRev = pcbRev1;
-                                break;
-                            case 4 ... 15:
-                                pcbRev = pcbRev2;
-                                break;
-                            default:
-                                break;
-                        } /* switch */
+                            pcbRev = pcbRev1;
+                        }
+                        
+                        else
+                        {
+                            pcbRev = pcbRev2;
+                        }
                     }
                 }
             } /* while */

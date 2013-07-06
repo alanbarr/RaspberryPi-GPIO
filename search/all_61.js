@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['advice_20on_20use',['Advice on Use',['../advice.html',1,'']]],
   ['alt0',['alt0',['../rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa0e19f68588a6959ca4f0d74fb32ca72c',1,'rpiGpio.h']]],
   ['alt1',['alt1',['../rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa3abe1eaebc98b53bbc36be3820e8aee6',1,'rpiGpio.h']]],
   ['alt2',['alt2',['../rpiGpio_8h.html#aab35237a8dc247686087f4dfe336818fa24924d8b71454e7d287e484589407660',1,'rpiGpio.h']]],

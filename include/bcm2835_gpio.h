@@ -1,9 +1,9 @@
-/** 
+/**
  * @file
- *  @brief Header file for BCM2835 GPIO registers. 
+ *  @brief Header file for BCM2835 GPIO registers.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
- *  a C library for basic control of the Raspberry Pi's GPIO pins. 
+ *  a C library for basic control of the Raspberry Pi's GPIO pins.
  *  Copyright (C) Alan Barr 2012
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,11 +19,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- *  The addresses of the GPIO registers are the physical addresses of the GPIO 
+ *  The addresses of the GPIO registers are the physical addresses of the GPIO
  *  registers as available through /dev/mem.
  *  From page 6 of BCM2835 ARM Peripherals:
- *      Physical addresses range from 0x20000000 to 0x20FFFFFF for peripherals. 
- *      The bus addresses for peripherals are set up to map onto the peripheral 
+ *      Physical addresses range from 0x20000000 to 0x20FFFFFF for peripherals.
+ *      The bus addresses for peripherals are set up to map onto the peripheral
  *      bus address range starting at 0x7E000000.
  *      Thus a peripheral advertised here at bus address 0x7Ennnnnn is available
  *      at physical address 0x20nnnnnn.
@@ -126,10 +126,10 @@
 #define GPFSEL_ALT3             0x7 /**< Sets a pin to alternative function 3 */
 #define GPFSEL_ALT4             0x3 /**< Sets a pin to alternative function 4 */
 #define GPFSEL_ALT5             0x2 /**< Sets a pin to alternative function 5 */
-#define GPFSEL_BITS             0x7 /**< Three bits per GPIO in the GPFSEL register */ 
+#define GPFSEL_BITS             0x7 /**< Three bits per GPIO in the GPFSEL register */
 
 /* Function select bits for GPPUD - the pullup/pulldown resistor register */
-#define GPPUD_DISABLE           0x0 /**< Disables the resistor */ 
+#define GPPUD_DISABLE           0x0 /**< Disables the resistor */
 #define GPPUD_PULLDOWN          0x1 /**< Enables a pulldown resistor */
 #define GPPUD_PULLUP            0x2 /**< Enables a pullup resistor */
 
@@ -162,18 +162,24 @@
 #define BSC2_DEL                0x20805018 /**< BSC2 Data Delay Register Address */
 
 /**********************************************************************************/
-/* The following are offset address which can be used with a pointer to BSC0_BASE */
+/* The following are the base addresses for each BSC module                       */
 /**********************************************************************************/
+#define BSC0_BASE           BSC0_C      /**< BSC0 Base Address */
+#define BSC1_BASE           BSC1_C      /**< BSC1 Base Address */
+#define BSC2_BASE           BSC2_C      /**< BSC2 Base Address */
 
-#define BSC0_BASE           BSC0_C      /**< First BSC0 address of interest */
+/**********************************************************************************/
+/* The following are offset addresses which can be used with a pointer to the
+ * appropriate BSC base */
+/**********************************************************************************/
+#define BSC_C_OFFSET        0x00000000  /**< BSC Control offset from BSCx_BASE */
+#define BSC_S_OFFSET        0x00000004  /**< BSC Status offset from BSCx_BASE */
+#define BSC_DLEN_OFFSET     0x00000008  /**< BSC Data Length offset from BSCx_BASE */
+#define BSC_A_OFFSET        0x0000000C  /**< BSC Slave Address offset from BSCx_BASE */
+#define BSC_FIFO_OFFSET     0x00000010  /**< BSC Data FIFO offset from BSCx_BASE */
+#define BSC_DIV_OFFSET      0x00000014  /**< BSC Clock Divider offset from BSCx_BASE */
+#define BSC_DEL_OFFSET      0x00000018  /**< BSC Data Delay offset from BSCx_BASE */
 
-#define BSC0_C_OFFSET       0x00000000  /**< BSC0 Control offset from BSC0_BASE */
-#define BSC0_S_OFFSET       0x00000004  /**< BSC0 Status offset from BSC0_BASE */
-#define BSC0_DLEN_OFFSET    0x00000008  /**< BSC0 Data Length offset from BSC0_BASE */
-#define BSC0_A_OFFSET       0x0000000C  /**< BSC0 Slave Address offset from BSC0_BASE */
-#define BSC0_FIFO_OFFSET    0x00000010  /**< BSC0 Data FIFO offset from BSC0_BASE */
-#define BSC0_DIV_OFFSET     0x00000014  /**< BSC0 Clock Divider offset from BSC0_BASE */
-#define BSC0_DEL_OFFSET     0x00000018  /**< BSC0 Data Delay offset from BSC0_BASE */
 
 /**********************************************************************************/
 /* The following are the BSC Control Register Bits                                */

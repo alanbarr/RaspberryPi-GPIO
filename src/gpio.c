@@ -3,10 +3,10 @@
  *  @brief Contains source for the GPIO functionality.
  *
  *  This is is part of https://github.com/alanbarr/RaspberryPi-GPIO
- *  a C library for basic control of the Raspberry Pi's GPIO pins. 
+ *  a C library for basic control of the Raspberry Pi's GPIO pins.
  *  Copyright (C) Alan Barr 2012
  *
- *  This code was loosely based on the example code 
+ *  This code was loosely based on the example code
  *  provided by Dom and Gert found at:
  *      http://elinux.org/RPi_Low-level_peripherals
  *
@@ -23,40 +23,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @page gpio GPIO
- * @section gpio_pins GPIO Pins
- *
- * @attention Take care when wiring up any GPIO pin. Doing so incorrectly could 
- *            potentially do damage for instance shorting out a positive rail 
- *            and ground.
- *
- * @subsection gpio_pins_layout Layout
- *  Pin 1 should be labeled such on the PCB and should also be the closest pin to
- *  the SD card.
- *  <pre>
- *           _______
- *  3V3    |  1  2 | 5V         
- *  GPIO00 |  3  4 | DNC        
- *  GPIO01 |  5  6 | GND
- *  GPIO04 |  7  8 | GPIO14
- *  DNC    |  9 10 | GPIO15
- *  GPIO17 | 11 12 | GPIO18
- *  GPIO21 | 13 14 | DNC
- *  GPIO22 | 15 16 | GPIO23
- *  DNC    | 17 18 | GPIO24
- *  GPIO10 | 19 20 | DNC
- *  GPIO09 | 21 22 | GPIO25
- *  GPIO11 | 23 24 | GPIO08
- *  DNC    | 25 26 | GPIO07
- *          _______
- *  </pre>
- *
- * @subsection gpio_pins_numbering Numbering
- *  All references to GPIO pin numbering is this code refers to the pin number
- *  as it is on the BCM2835 chip, i.e. in the diagram above GPIOxx. This is
- *  notably different from the physical pin layout on the Raspberry Pi.
  */
 
+/* TODO the following has grown enough it requires its own private header */
 #include "rpiGpio.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -70,21 +39,14 @@
 
 /** The size the GPIO mapping is required to be. GPPUDCLK1_OFFSET is the last
  ** register offset of interest. */
-#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET) 
+#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET)
 
 /** Number of GPIO pins which are available on the Raspberry Pi. */
 #define NUMBER_GPIO                 17
 
-/** Delay for changing pullup/pulldown resistors. It should be at least 150 
+/** Delay for changing pullup/pulldown resistors. It should be at least 150
  ** cycles which is 0.6 uS (1 / 250 MHz * 150).  (250 Mhz is the core clock)*/
 #define RESISTOR_SLEEP_US           1
-
-/* Local / internal prototypes */
-static errStatus gpioValidatePin(int gpioNumber);
-
-/**** Globals ****/
-/** @brief Pointer which will be mmap'd to the GPIO memory in /dev/mem */
-static volatile uint32_t * gGpioMap = NULL;
 
 /** @brief GPSET_0 register */
 #define GPIO_GPSET0     *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t))
@@ -97,8 +59,18 @@ static volatile uint32_t * gGpioMap = NULL;
 /** @brief GPIO_GPPUDCLK0 register */
 #define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))
 
+/* Local / internal prototypes */
+static errStatus gpioValidatePin(int gpioNumber);
+
+/**** Globals ****/
+/** @brief Pointer which will be mmap'd to the GPIO memory in /dev/mem */
+static volatile uint32_t * gGpioMap = NULL;
+
+/** @brief PCB revision that executable is being run on */
+static tPcbRev pcbRev = pcbRevError;
+
 /**
- * @brief   Maps the memory used for GPIO access. This function must be called 
+ * @brief   Maps the memory used for GPIO access. This function must be called
  *          prior to any of the other GPIO calls.
  * @return  An error from #errStatus. */
 errStatus gpioSetup(void)
@@ -106,12 +78,12 @@ errStatus gpioSetup(void)
     int mem_fd = 0;
     errStatus rtn = ERROR_DEFAULT;
 
-    if ((mem_fd = open("/dev/mem", O_RDWR)) < 0) 
+    if ((mem_fd = open("/dev/mem", O_RDWR)) < 0)
     {
         dbgPrint(DBG_INFO, "open() failed. /dev/mem. errno %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
- 
+
     else if ((gGpioMap = (volatile uint32_t *)mmap(NULL,
                                                    GPIO_MAP_SIZE,
                                                    PROT_READ|PROT_WRITE,
@@ -122,7 +94,7 @@ errStatus gpioSetup(void)
         dbgPrint(DBG_INFO, "mmap() failed. errno: %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
-    
+
     /* Close the fd, we have now mapped it */
     else if (close(mem_fd) != OK)
     {
@@ -132,7 +104,55 @@ errStatus gpioSetup(void)
 
     else
     {
-        rtn = OK;
+        FILE* cpuinfo = fopen("/proc/cpuinfo", "r");
+        if (cpuinfo)
+        {
+            char* line = NULL;
+            ssize_t linelen;
+            size_t foo;
+
+            while (((linelen = getline(&line, &foo, cpuinfo)) >= 0))
+            {
+                if (strstr(line, "Revision") == line)
+                {
+                    char* rev = strstr(line, ":");
+                    if (rev)
+                    {
+                        long revision = strtol(rev + 1, NULL, 16);
+
+                        if (revision <= 3)
+                        {
+                            pcbRev = pcbRev1;
+                        }
+                        
+                        else
+                        {
+                            pcbRev = pcbRev2;
+                        }
+                    }
+                }
+            } /* while */
+            if (pcbRev != pcbRevError)
+            {
+                rtn = OK;
+            }
+            else
+            {
+                dbgPrint(DBG_INFO, "did not find revision in cpuinfo.");
+                rtn = ERROR_EXTERNAL;
+            }
+
+            if (line)
+            {
+                free(line);
+            }
+            fclose(cpuinfo);
+        }
+        else
+        {
+            dbgPrint(DBG_INFO, "can't open /proc/cpuinfo. errno: %s.", strerror(errno));
+            rtn = ERROR_EXTERNAL;
+        }
     }
 
     return rtn;
@@ -140,11 +160,11 @@ errStatus gpioSetup(void)
 
 
 /**
- * @brief   Unmaps the memory used for the gpio pins. This function should be 
+ * @brief   Unmaps the memory used for the gpio pins. This function should be
  *          called when finished with the GPIO pins.
  * @return  An error from #errStatus. */
 errStatus gpioCleanup(void)
-{    
+{
     errStatus rtn = ERROR_DEFAULT;
 
     if (gGpioMap == NULL)
@@ -158,7 +178,7 @@ errStatus gpioCleanup(void)
         dbgPrint(DBG_INFO, "mummap() failed. errno %s.", strerror(errno));
         rtn = ERROR_EXTERNAL;
     }
-    
+
     else
     {
         gGpioMap = NULL;
@@ -171,7 +191,7 @@ errStatus gpioCleanup(void)
 /**
  * @brief               Sets the functionality of the desired pin.
  * @param gpioNumber    The gpio pin number to change.
- * @param function      The desired functionality for the pin. 
+ * @param function      The desired functionality for the pin.
  * @return              An error from #errStatus. */
 errStatus gpioSetFunction(int gpioNumber, eFunction function)
 {
@@ -188,7 +208,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
         dbgPrint(DBG_INFO, "eFunction was out of range. %d", function);
         rtn = ERROR_RANGE;
     }
-    
+
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioValidatePin() failed. Ensure pin %d is valid.", gpioNumber);
@@ -196,7 +216,7 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
 
     else
     {
-        /* Clear what ever function bits currently exist - this puts the pin 
+        /* Clear what ever function bits currently exist - this puts the pin
          * into input mode.*/
         *(gGpioMap + (gpioNumber / 10)) &= ~(GPFSEL_BITS << ((gpioNumber % 10) * 3));
 
@@ -211,22 +231,22 @@ errStatus gpioSetFunction(int gpioNumber, eFunction function)
 
 
 /**
- * @brief               Sets a pin to high or low. 
- * @details             The pin should be configured as an ouput with 
+ * @brief               Sets a pin to high or low.
+ * @details             The pin should be configured as an ouput with
  *                      gpioSetFunction() prior to this.
- * @param gpioNumber    The pin to set. 
+ * @param gpioNumber    The pin to set.
  * @param state         The desired state of the pin.
  * @return              An error from #errStatus.*/
 errStatus gpioSetPin(int gpioNumber, eState state)
-{ 
+{
     errStatus rtn = ERROR_DEFAULT;
 
     if (gGpioMap == NULL)
     {
        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
        rtn = ERROR_NULL;
-    } 
-    
+    }
+
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
        dbgPrint(DBG_INFO, "gpioValidatePin() failed. Ensure pin %d is valid.", gpioNumber);
@@ -239,7 +259,7 @@ errStatus gpioSetPin(int gpioNumber, eState state)
         GPIO_GPSET0 = 0x1 << gpioNumber;
         rtn = OK;
     }
-    
+
     else if (state == low)
     {
         /* The offsets are all in bytes. Divide by sizeof uint32_t to allow
@@ -261,11 +281,11 @@ errStatus gpioSetPin(int gpioNumber, eState state)
 /**
  * @brief               Reads the current state of a gpio pin.
  * @param gpioNumber    The number of the GPIO pin to read.
- * @param[out] state    Pointer to the variable in which the GPIO pin state is 
+ * @param[out] state    Pointer to the variable in which the GPIO pin state is
  *                      returned.
  * @return              An error from #errStatus. */
 errStatus gpioReadPin(int gpioNumber, eState * state)
-{ 
+{
     errStatus rtn = ERROR_DEFAULT;
 
     if (gGpioMap == NULL)
@@ -273,13 +293,19 @@ errStatus gpioReadPin(int gpioNumber, eState * state)
         dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
         rtn = ERROR_NULL;
     }
-    
+
+    else if (state == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter state was NULL.");
+        rtn = ERROR_NULL;
+    }
+
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
         dbgPrint(DBG_INFO, "gpioValidatePin() failed. Pin %d isn't valid.", gpioNumber);
     }
-    
-    else 
+
+    else
     {
         /* Check if the appropriate bit is high */
         if (GPIO_GPLEV0 & (0x1 << gpioNumber))
@@ -293,7 +319,7 @@ errStatus gpioReadPin(int gpioNumber, eState * state)
         }
 
         rtn = OK;
-    }   
+    }
 
     return rtn;
 }
@@ -309,13 +335,13 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
 {
     errStatus rtn = ERROR_DEFAULT;
     struct timespec sleepTime;
-    
+
     if (gGpioMap == NULL)
     {
        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
        rtn = ERROR_NULL;
-    } 
-    
+    }
+
     else if ((rtn = gpioValidatePin(gpioNumber)) != OK)
     {
        dbgPrint(DBG_INFO, "gpioValidatePin() failed. Pin %d isn't valid.", gpioNumber);
@@ -350,6 +376,54 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
     return rtn;
 }
 
+/**
+ * @brief                       Get the correct I2C pins.
+ * @details                     The different revisions of the PI have their I2C
+ *                              ports on different GPIO
+ *                              pins which require different BSC modules.
+ * @param[out] gpioNumberScl    Integer to be populated with scl gpio number.
+ * @param[out] gpioNumberSda    Integer to be populated with sda gpio number.
+ * @todo TODO                   Does this need to be public or internal only?
+ * @return                      An error from #errStatus. */
+errStatus gpioGetI2cPins(int * gpioNumberScl, int * gpioNumberSda)
+{
+    errStatus rtn = ERROR_DEFAULT;
+
+    if (gGpioMap == NULL)
+    {
+        dbgPrint(DBG_INFO, "gGpioMap was NULL. Ensure gpioSetup() was called successfully.");
+        rtn = ERROR_NULL;
+    }
+
+    else if (gpioNumberScl == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter gpioNumberScl is NULL.");
+        rtn = ERROR_NULL;
+    }
+    
+    else if (gpioNumberSda == NULL)
+    {
+        dbgPrint(DBG_INFO, "Parameter gpioNumberSda is NULL.");
+        rtn = ERROR_NULL;
+    }
+
+    else if (pcbRev == pcbRev1)
+    {
+        *gpioNumberScl = REV1_SCL;
+        *gpioNumberSda = REV1_SDA;
+        rtn = OK;
+    }
+
+    else if (pcbRev == pcbRev2)
+    {
+        *gpioNumberScl = REV2_SCL;
+        *gpioNumberSda = REV2_SDA;
+        rtn = OK;
+    }
+
+    return rtn;
+}
+
 
 #undef  ERROR
 /** Redefining to replace macro with x as a string, i.e. "x". For use in
@@ -363,13 +437,13 @@ errStatus gpioSetPullResistor(int gpioNumber, eResistor resistorOption)
 const char * gpioErrToString(errStatus error)
 {
     static const char * errorString[] = { ERRORS };
-    
+
     if (error < 0 || error >= ERROR_MAX)
     {
         return "InvalidError";
     }
 
-    else 
+    else
     {
         return errorString[error];
     }
@@ -380,8 +454,8 @@ const char * gpioErrToString(errStatus error)
  * @brief            Debug function wrapper for fprintf().
  * @details          Allows file and line information to be added easier
  *                   to output strings. #DBG_INFO is a macro which is useful
- *                   to call as the "first" parameter to this function. Note 
- *                   this function will add on a newline to the end of a format 
+ *                   to call as the "first" parameter to this function. Note
+ *                   this function will add on a newline to the end of a format
  *                   string so one is generally not required in \p format.
  * @param[in] stream Output stream for strings, e.g. stderr, stdout.
  * @param[in] file   Name of file to be printed. Should be retrieved with __FILE__.
@@ -407,7 +481,7 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
             return tempRtn;
         }
         rtn += tempRtn;
-        
+
         va_start(arguments, format);
         if ((tempRtn = vfprintf(stream, format, arguments)) < 0)
         {
@@ -426,26 +500,49 @@ int dbgPrint(FILE * stream, const char * file, int line, const char * format, ..
     return rtn;
 }
 
-/****************************** Internal Functions ******************************/ 
+/****************************** Internal Functions ******************************/
 
 /**
- * @brief               Internal function which Validates that the pin 
+ * @brief               Internal function which Validates that the pin
  *                      \p gpioNumber is valid for the Raspberry Pi.
+ * @details             The first time this function is called it will perform
+ *                      some basic initalisation on internal variables.
  * @param gpioNumber    The pin number to check.
  * @return              An error from #errStatus. */
 static errStatus gpioValidatePin(int gpioNumber)
 {
     errStatus rtn = ERROR_INVALID_PIN_NUMBER;
-    int index;
+    int index = 0;
+    /* TODO REV1 and REV2 have the same pincount. REV2 technically has more if 
+     * P5 is supported. If there is a REV3 the size of this array will need to
+     * be addressed. */
+    static uint32_t validPins[REV2_PINCNT] = {0};
+    static uint32_t pinCnt = 0;
 
-    /** List of all BCM2835 pins available through the Raspberry Pi header */
-    const static int32_t gValidPins[NUMBER_GPIO] = { 0, 1, 4, 7, 8, 9, 10, 11,
-                                                     14, 15, 17, 18, 21, 22, 23,
-                                                     24, 25};
-
-    for (index = 0; index < NUMBER_GPIO; index++)
+    if (pinCnt == 0)
     {
-        if (gpioNumber == gValidPins[index])
+        if (pcbRev == pcbRevError)
+        {
+            rtn = ERROR_RANGE;
+        }
+
+        else if (pcbRev == pcbRev1)
+        {
+            const uint32_t validPinsForRev1[REV1_PINCNT] = REV1_PINS;
+            memcpy(validPins, validPinsForRev1, sizeof(validPinsForRev1));
+            pinCnt = REV1_PINCNT;
+        }
+        else if (pcbRev == pcbRev2)
+        {
+            const uint32_t validPinsForRev2[REV2_PINCNT] = REV2_PINS;
+            memcpy(validPins, validPinsForRev2, sizeof(validPinsForRev2));
+            pinCnt = REV2_PINCNT;
+        }
+    }
+
+    for (index = 0; index < pinCnt; index++)
+    {
+        if (gpioNumber == validPins[index])
         {
             rtn = OK;
             break;

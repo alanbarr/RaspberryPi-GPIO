@@ -82,10 +82,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><p>"The Broadcom Serial Controller (BSC) controller is a master, fast-mode (400Kb/s) BSC controller. The Broadcom Serial Control bus is a proprietary bus compliant with the Philips® I2C bus/interface version 2.1 January 2000." BCM2835 ARM Peripherals</p>
 <h1><a class="anchor" id="i2c_pinout_rev1"></a>
-I2C Pins PCB rev1</h1>
+I2C on Rev1 P1 Header</h1>
 <p>The Raspberry Pi has I2C functionality available at GPIO00, SDA and GPI01, SCL. </p>
 <pre>
-              _______
+             _______
  3V3        |  1  2 | 5V
  SDA (BSC0) |  3  4 | DNC
  SCL (BSC0) |  5  6 | GND
@@ -101,11 +101,10 @@ I2C Pins PCB rev1</h1>
  DNC        | 25 26 | GPIO07
              _______
  </pre><h1><a class="anchor" id="i2c_pinout_rev2"></a>
-I2C Pins PCB rev2</h1>
-<p>The Raspberry Pi has I2C functionality available at GPIO00, SDA and GPI01, SCL. </p>
+I2C on Rev2 P1 Header</h1>
+<p>The Raspberry Pi has I2C functionality available at GPIO02, SDA and GPI03, SCL. </p>
 <pre>
-<hr/>
-<p>
+             _______
  3V3        |  1  2 | 5V
  SDA (BSC1) |  3  4 | 5V
  SCL (BSC1) |  5  6 | GND
@@ -118,14 +117,15 @@ I2C Pins PCB rev2</h1>
  GPIO10     | 19 20 | GND
  GPIO09     | 21 22 | GPIO25
  GPIO11     | 23 24 | GPIO08
- DNC        | 25 26 | GPIO07
-</p>
-<hr/>
-
- </pre> </div></div><!-- contents -->
+ GND        | 25 26 | GPIO07
+             _______
+ </pre><h1><a class="anchor" id="i2c_revision"></a>
+PCB Revisions</h1>
+<dl class="section note"><dt>Note</dt><dd>This library should automatically detect the correct BSC module to use. Since the pins for both revisions are physically located in the same spot on the header, this should be transparent to the user. </dd></dl>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Jul 6 2013 20:17:12 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jul 8 2013 21:39:30 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

@@ -1,6 +1,6 @@
 # This make file creates a library for the gpio pins.
 CC=gcc
-CCFLAGS=-Wall -Werror -g -I../include -I. -Iinc -pedantic
+CCFLAGS=-Wall -Werror -g -I../include -Iinc -pedantic
 
 AR=ar
 ARFLAGS=-rcs

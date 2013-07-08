@@ -9,3 +9,4 @@ errStatus gpioClockCleanup(void);
 errStatus gpioClockPwmDivider(uint32_t divider);
 
 #endif /*_RPI_CLOCKS_H_*/
+

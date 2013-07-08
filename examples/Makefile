@@ -1,6 +1,6 @@
 CC=gcc
 AR=ar
-CCFLAGS=-Wall -Werror -g -I../include
+CCFLAGS=-Wall -Werror -g -I../include -pedantic 
 LD_FLAGS=--static -L$(LIB_PATH) 
 
 LIB_BASE_NAME=rpigpio

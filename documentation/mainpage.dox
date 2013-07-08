@@ -1,8 +1,8 @@
 /**
 
 @brief  The library provided here allows basic input / output control over the
-        GPIO pins of a Raspberry Pi from C. The pins are accessed from memory 
-        mapped pointer to /dev/mem (see man mmap).
+        GPIO pins of a Raspberry Pi (rev1 and rev2) from C. The pins are 
+        accessed from memory mapped pointer to /dev/mem (see man mmap).
 
 @mainpage
 @section getting_started Getting Started
@@ -47,6 +47,8 @@ The examples should be run as root.
 @section ack Acknowledgements
     Some of the code was based upon an example by Dom and Gert which was found
     at: http://elinux.org/RPi_Low-level_peripherals#Introduction.
+    Thanks to github user sjaeckel for his large part in adding support for
+    the rev2 PCB layout.
 
 @section copy Copyright
     This program is free software: you can redistribute it and/or modify

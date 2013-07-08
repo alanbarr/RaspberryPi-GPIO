@@ -1,0 +1,58 @@
+/**
+
+@page i2c I2C (BSC)
+ "The Broadcom Serial Controller (BSC) controller is a master, fast-mode
+ (400Kb/s) BSC controller. The Broadcom Serial Control bus is a proprietary
+ bus compliant with the Philips® I2C bus/interface version 2.1 January 2000."
+ BCM2835 ARM Peripherals
+
+@section i2c_pinout_rev1 I2C on Rev1 P1 Header
+ The Raspberry Pi has I2C functionality available at GPIO00, SDA and
+ GPI01, SCL.
+ <pre>
+             _______
+ 3V3        |  1  2 | 5V
+ SDA (BSC0) |  3  4 | DNC
+ SCL (BSC0) |  5  6 | GND
+ GPIO04     |  7  8 | GPIO14
+ DNC        |  9 10 | GPIO15
+ GPIO17     | 11 12 | GPIO18
+ GPIO21     | 13 14 | DNC
+ GPIO22     | 15 16 | GPIO23
+ DNC        | 17 18 | GPIO24
+ GPIO10     | 19 20 | DNC
+ GPIO09     | 21 22 | GPIO25
+ GPIO11     | 23 24 | GPIO08
+ DNC        | 25 26 | GPIO07
+             _______
+ </pre>
+
+
+
+@section i2c_pinout_rev2 I2C on Rev2 P1 Header
+ The Raspberry Pi has I2C functionality available at GPIO02, SDA and
+ GPI03, SCL.
+ <pre>
+             _______
+ 3V3        |  1  2 | 5V
+ SDA (BSC1) |  3  4 | 5V
+ SCL (BSC1) |  5  6 | GND
+ GPIO04     |  7  8 | GPIO14
+ GND        |  9 10 | GPIO15
+ GPIO17     | 11 12 | GPIO18
+ GPIO27     | 13 14 | GND
+ GPIO22     | 15 16 | GPIO23
+ 3V3        | 17 18 | GPIO24
+ GPIO10     | 19 20 | GND
+ GPIO09     | 21 22 | GPIO25
+ GPIO11     | 23 24 | GPIO08
+ GND        | 25 26 | GPIO07
+             _______
+ </pre>
+
+
+@section i2c_revision PCB Revisions
+ @note This library should automatically detect the correct BSC module to use.
+ Since the pins for both revisions are physically located in the same spot on
+ the header, this should be transparent to the user.
+*/

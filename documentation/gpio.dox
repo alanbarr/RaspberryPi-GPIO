@@ -24,7 +24,7 @@
  Pin 1 should be labeled such on the PCB and should also be the closest pin to
  the SD card.
  <pre>
-          _______
+         _______
  3V3    |  1  2 | 5V
  GPIO00 |  3  4 | DNC
  GPIO01 |  5  6 | GND
@@ -41,11 +41,11 @@
          _______
  </pre>
 
-@subsection gpio_rev2 Rev2 P1 Layout
+@subsection gpio_rev2 Rev2 P1 Header Layout
  Pin 1 should be labeled such on the PCB and should also be the closest pin to
  the SD card.
  <pre>
-          _______
+         _______
  3V3    |  1  2 | 5V
  GPIO02 |  3  4 | 5V
  GPIO03 |  5  6 | GND

@@ -25,6 +25,9 @@
  *
  */
 
+#ifndef _gpio_h_
+#define _gpio_h_
+
 #include "rpiGpio.h"
 #include <stdarg.h>
 #include <stdlib.h>
@@ -57,4 +60,7 @@
 #define GPIO_GPPUD      *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t))
 /** @brief GPIO_GPPUDCLK0 register */
 #define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))
+
+#endif /*_gpio_h_*/
+
 

@@ -3,5 +3,6 @@
   @example gpio_example_output.c
   @example i2c_example_bitexpander.c
   @example i2c_example_eeprom.c
+  @example i2c_example_temp_sensor.c
   @example pwm_example.c
 */

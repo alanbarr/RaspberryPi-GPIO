@@ -16,6 +16,7 @@ all: dirs gpio_example_output.exe     \
 		  gpio_example_input.exe      \
 		  i2c_example_bitexpander.exe \
 		  i2c_example_eeprom.exe	  \
+		  i2c_example_temp_sensor.exe \
 		  pwm_example.exe
 
 %.exe: %.c $(LIB_NAME)

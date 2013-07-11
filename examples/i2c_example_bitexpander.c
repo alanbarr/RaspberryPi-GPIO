@@ -65,7 +65,7 @@ int main(void)
 
     if (gpioI2cWriteData(&TxData[0], 2) != OK)
     {
-        dbgPrint(DBG_INFO, "gpioI2cWriteData failed. %s. Exiting\n");
+        dbgPrint(DBG_INFO, "gpioI2cWriteData failed. Exiting\n");
         return 1;
     }
 

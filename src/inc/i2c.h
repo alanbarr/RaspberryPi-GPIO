@@ -25,8 +25,8 @@
  *
  */
 
-#ifndef _i2c_h_
-#define _i2c_h_
+#ifndef _I2C_H_
+#define _I2C_H_
 
 #include "rpiGpio.h"
 #include <stdarg.h>
@@ -65,5 +65,5 @@
 #define I2C_FIFO                    *(gI2cMap + BSC_FIFO_OFFSET / sizeof(uint32_t))
 
 
-#endif /*_i2c_h_*/
+#endif /*_I2C_H_*/
 

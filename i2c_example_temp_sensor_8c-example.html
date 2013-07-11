@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3.1"/>
-<title>Raspberry Pi GPIO Library: i2c_example_bitexpander.c</title>
+<title>Raspberry Pi GPIO Library: i2c_example_temp_sensor.c</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -77,12 +77,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">i2c_example_bitexpander.c</div>  </div>
+<div class="title">i2c_example_temp_sensor.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><div class="line"><span class="comment">/*</span></div>
-<div class="line"><span class="comment"> *  I2C Example Bit Expander:</span></div>
-<div class="line"><span class="comment"> *  The following is an example of using a MCP23017 I2C bit expander </span></div>
+<div class="line"><span class="comment"> *  I2C Example Temperature Sensor:</span></div>
+<div class="line"><span class="comment"> *  The following is an example of using a TMP102 Temperature Sensor</span></div>
 <div class="line"><span class="comment"> *  with the Raspberry Pi.</span></div>
 <div class="line"><span class="comment"> *</span></div>
 <div class="line"><span class="comment"> *  This program is free software: you can redistribute it and/or modify</span></div>
@@ -101,15 +101,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="comment"> * Tested Setup:</span></div>
 <div class="line"><span class="comment"> *</span></div>
 <div class="line"><span class="comment"> * ______        ____________</span></div>
-<div class="line"><span class="comment"> *   3V3|-------|VCC     A.0|----LED----GND</span></div>
-<div class="line"><span class="comment"> *   GND|-------|GND     A.1|----LED----GND</span></div>
-<div class="line"><span class="comment"> *   SDA|-------|SDA     A.2|----LED----GND</span></div>
-<div class="line"><span class="comment"> *   SCL|-------|SCL     A.3|----LED----GND</span></div>
+<div class="line"><span class="comment"> *   3V3|-------|VCC    ADD0|--- GND</span></div>
+<div class="line"><span class="comment"> *   GND|-------|GND        |</span></div>
+<div class="line"><span class="comment"> *   SDA|-------|SDA        |</span></div>
+<div class="line"><span class="comment"> *   SCL|-------|SCL        |</span></div>
 <div class="line"><span class="comment"> *      |       |           |</span></div>
-<div class="line"><span class="comment"> * R. Pi|       | MCP23017  |            </span></div>
+<div class="line"><span class="comment"> * R. Pi|       |  TMP102   |            </span></div>
 <div class="line"><span class="comment"> * _____|       |___________|</span></div>
-<div class="line"><span class="comment"> *</span></div>
-<div class="line"><span class="comment"> *</span></div>
 <div class="line"><span class="comment"> *</span></div>
 <div class="line"><span class="comment"> */</span>     </div>
 <div class="line"></div>
@@ -117,15 +115,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="rpiGpio_8h.html" title="The main header file of the GPIO library.">rpiGpio.h</a>&quot;</span></div>
 <div class="line"></div>
-<div class="line"><span class="preprocessor">#define MCP23017_IODIRA     0x00</span></div>
-<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define MCP23017_GPIOA      0x12</span></div>
-<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define MCP23017_ADDRESS    0x20</span></div>
+<div class="line"><span class="preprocessor">#define TMP102_ADDRESS                  0x48    </span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_ADDR_PIN0                0x01    </span><span class="comment">/*A0*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_TEMPERATURE_REGISTER     0x00    </span><span class="comment">/*Read Only*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_CONFIGURATION_REGISTER   0x01    </span><span class="comment">/*Read/Write*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_TLOW_REGISTER            0x02    </span><span class="comment">/*Read/Write*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_THIGH_REGISTER           0x03    </span><span class="comment">/*Read/Write*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span></div>
+<div class="line"><span class="comment">/* Configuration Register Bits */</span></div>
+<div class="line"><span class="comment">/* Byte 1 */</span></div>
+<div class="line"><span class="preprocessor">#define TMP102_OS                       0x80    </span><span class="comment">/*One Shot temperature measurement mode*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_R1                       0x40    </span><span class="comment">/*Converstion Resolution bit 1 (Read Only)*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_R0                       0x20    </span><span class="comment">/*Converstion Resolution bit 0 (Read Only)*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_F1                       0x10    </span><span class="comment">/*Fault queue bit 1*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_F0                       0x08    </span><span class="comment">/*Fault queue bit 0*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_POL                      0x04    </span><span class="comment">/*Polarity of Alert pin*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_TM                       0x02    </span><span class="comment">/*Thermostat mode*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_SD                       0x01    </span><span class="comment">/*Shut Down mode*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span></div>
+<div class="line"><span class="comment">/* Byte 2 */</span> </div>
+<div class="line"><span class="preprocessor">#define TMP102_CR1                      0x80    </span><span class="comment">/*Conversion Rate Bit 1*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_CR0                      0x40    </span><span class="comment">/*Conversion Rate Bit 0*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_AL                       0x20    </span><span class="comment">/*Alert Bit (Read Only)*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_EM                       0x10    </span><span class="comment">/*Extended mode*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span></div>
+<div class="line"><span class="comment">/* Conversion Rates */</span></div>
+<div class="line"><span class="preprocessor">#define TMP102_CR_0_25Hz                CR0</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_CR_1Hz                   CR1</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_CR_4Hz                   CR1     </span><span class="comment">/*default*/</span><span class="preprocessor"></span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor">#define TMP102_CR_8Hz                   (CR1 + CR0)</span></div>
+<div class="line"><span class="preprocessor"></span></div>
+<div class="line"><span class="comment">/* Temp = Temp. Register Value * TMP102_CONVERSION */</span></div>
+<div class="line"><span class="preprocessor">#define TMP102_CONVERSION               0.0625</span></div>
 <div class="line"><span class="preprocessor"></span></div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>)</div>
 <div class="line">{ </div>
-<div class="line">    uint8_t TxData[4] = {MCP23017_IODIRA, 0x00, MCP23017_GPIOA, 0x0F};</div>
-<div class="line">    <span class="keywordtype">int</span> ctr;</div>
+<div class="line">    uint8_t rxBuffer[2] = {0};</div>
+<div class="line">    uint8_t txBuffer[1] = {TMP102_TEMPERATURE_REGISTER};</div>
 <div class="line">    <a class="code" href="rpiGpio_8h.html#a130fb43c66c07448041da10becd8acfd" title="The enum of possible errors returned from gpio functions. Errors themselves are defined in the macro ...">errStatus</a> rtn;</div>
+<div class="line">    uint32_t temperature = 0;</div>
+<div class="line">    <span class="keywordtype">float</span> temperature_f = 0;</div>
 <div class="line"></div>
 <div class="line">    <span class="keywordflow">if</span> ((rtn = <a name="a0"></a><a class="code" href="gpio_8c.html#a0b78dc8e68922dfb7a99e8c73877d215" title="Maps the memory used for GPIO access. This function must be called prior to any of the other GPIO cal...">gpioSetup</a>()) != OK)</div>
 <div class="line">    {</div>
@@ -139,32 +168,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line">   </div>
-<div class="line">    <span class="keywordflow">if</span> (<a name="a4"></a><a class="code" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave</a>(MCP23017_ADDRESS) != OK)</div>
+<div class="line">    <span class="keywordflow">if</span> (<a name="a4"></a><a class="code" href="i2c_8c.html#a852d9dd7c454b47929b5cd0380405f6a" title="Sets the 7-bit slave address to communicate with.">gpioI2cSet7BitSlave</a>(TMP102_ADDRESS) != OK)</div>
 <div class="line">    {</div>
 <div class="line">        <a class="code" href="gpio_8c.html#af0a5b7ef542ee36b320fd991927ecfd3" title="Debug function wrapper for fprintf().">dbgPrint</a>(<a class="code" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162" title="Macro which covers the first three arguments of dbgPrint.">DBG_INFO</a>, <span class="stringliteral">&quot;gpioI2cSet7BitSlave failed. Exiting\n&quot;</span>);</div>
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"></div>
-<div class="line">    <span class="keywordflow">if</span> (<a name="a5"></a><a class="code" href="i2c_8c.html#adae6d49dedb53d4ce4da8f9e7135b6ef" title="Writes data to the address previously specified by gpioI2cSet7BitSlave().">gpioI2cWriteData</a>(&amp;TxData[0], 2) != OK)</div>
+<div class="line">    <span class="keywordflow">if</span> (<a name="a5"></a><a class="code" href="i2c_8c.html#adae6d49dedb53d4ce4da8f9e7135b6ef" title="Writes data to the address previously specified by gpioI2cSet7BitSlave().">gpioI2cWriteData</a>(txBuffer, 1) != OK)</div>
 <div class="line">    {</div>
 <div class="line">        <a class="code" href="gpio_8c.html#af0a5b7ef542ee36b320fd991927ecfd3" title="Debug function wrapper for fprintf().">dbgPrint</a>(<a class="code" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162" title="Macro which covers the first three arguments of dbgPrint.">DBG_INFO</a>, <span class="stringliteral">&quot;gpioI2cWriteData failed. Exiting\n&quot;</span>);</div>
 <div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"></div>
-<div class="line">    <a class="code" href="i2c_8c.html#adae6d49dedb53d4ce4da8f9e7135b6ef" title="Writes data to the address previously specified by gpioI2cSet7BitSlave().">gpioI2cWriteData</a>(&amp;TxData[2], 2);  </div>
-<div class="line"></div>
-<div class="line">    <span class="keywordflow">for</span>(ctr = 15; ctr &gt;= 0; ctr--)</div>
+<div class="line">    <span class="keywordflow">if</span> (<a name="a6"></a><a class="code" href="i2c_8c.html#aa370fbc453ae57202f4db99e45cce48d" title="Read a number of bytes from I2C. The slave address should have been previously set with gpioI2cSet7Bi...">gpioI2cReadData</a>(rxBuffer, 2) != OK)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="comment">/* Set the state of output pins to counter */</span></div>
-<div class="line">        TxData[3] = (uint8_t)ctr;</div>
-<div class="line"></div>
-<div class="line">        sleep(1);</div>
-<div class="line"></div>
-<div class="line">        <a class="code" href="i2c_8c.html#adae6d49dedb53d4ce4da8f9e7135b6ef" title="Writes data to the address previously specified by gpioI2cSet7BitSlave().">gpioI2cWriteData</a>(&amp;TxData[2], 2);  </div>
+<div class="line">        <a class="code" href="gpio_8c.html#af0a5b7ef542ee36b320fd991927ecfd3" title="Debug function wrapper for fprintf().">dbgPrint</a>(<a class="code" href="rpiGpio_8h.html#a9615e001b781d55752b3d44f9bfd5162" title="Macro which covers the first three arguments of dbgPrint.">DBG_INFO</a>, <span class="stringliteral">&quot;gpioI2cReadData failed. Exiting\n&quot;</span>);</div>
+<div class="line">        <span class="keywordflow">return</span> 1;</div>
 <div class="line">    }</div>
 <div class="line"></div>
-<div class="line">    <a name="a6"></a><a class="code" href="i2c_8c.html#a9d022272e845a6e9919d3fa4aa62df8f" title="Disables the I2C controller and unmaps the memory used for the i2c functionality. This function shoul...">gpioI2cCleanup</a>();</div>
-<div class="line">    <a name="a7"></a><a class="code" href="gpio_8c.html#a6846efae9091223b6f7652469dfbb38a" title="Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO ...">gpioCleanup</a>();</div>
+<div class="line">    temperature = rxBuffer[0] &lt;&lt; 4;</div>
+<div class="line">    temperature |= rxBuffer[1] &gt;&gt; 4;</div>
+<div class="line">    temperature_f = temperature * TMP102_CONVERSION;  </div>
+<div class="line"></div>
+<div class="line">    fprintf(stdout, <span class="stringliteral">&quot;Temperature: %.2f Celsius\n&quot;</span>, temperature_f);</div>
+<div class="line"></div>
+<div class="line">    <a name="a7"></a><a class="code" href="i2c_8c.html#a9d022272e845a6e9919d3fa4aa62df8f" title="Disables the I2C controller and unmaps the memory used for the i2c functionality. This function shoul...">gpioI2cCleanup</a>();</div>
+<div class="line">    <a name="a8"></a><a class="code" href="gpio_8c.html#a6846efae9091223b6f7652469dfbb38a" title="Unmaps the memory used for the gpio pins. This function should be called when finished with the GPIO ...">gpioCleanup</a>();</div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">} </div>
 <div class="line"></div>

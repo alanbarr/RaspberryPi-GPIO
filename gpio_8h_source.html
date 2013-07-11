@@ -23,7 +23,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Raspberry Pi GPIO Library
-   &#160;<span id="projectnumber">0.2</span>
+   &#160;<span id="projectnumber">0.3</span>
    </div>
    <div id="projectbrief">Library allowing for control of the Raspberry Pi&#39;s GPIO pins.</div>
   </td>
@@ -91,37 +91,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <a href="gpio_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="rpiGpio_8h.html" title="The main header file of the GPIO library.">rpiGpio.h</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;sys/mman.h&gt;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;time.h&gt;</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="gpio_8h.html#a9542a6000bf702bcd6cc746a6ea288a5">   41</a></span>&#160;<span class="preprocessor">#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET)</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="gpio_8h.html#a6b64e894305a43aa29bd86da0ef71a42">   44</a></span>&#160;<span class="preprocessor">#define NUMBER_GPIO                 17</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef _GPIO_H_</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _GPIO_H_</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="rpiGpio_8h.html" title="The main header file of the GPIO library.">rpiGpio.h</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;fcntl.h&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#include &lt;sys/mman.h&gt;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#include &lt;unistd.h&gt;</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#include &lt;errno.h&gt;</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;time.h&gt;</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="code" href="gpio_8h.html#a9542a6000bf702bcd6cc746a6ea288a5">   44</a></span>&#160;<span class="preprocessor">#define GPIO_MAP_SIZE               (GPPUDCLK1_OFFSET)</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="code" href="gpio_8h.html#a35aef2f894cc5896f369c190943bbe5d">   48</a></span>&#160;<span class="preprocessor">#define RESISTOR_SLEEP_US           1</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="gpio_8h.html#a03fcac259fa7dfb1b3075c2466138aeb">   51</a></span>&#160;<span class="preprocessor">#define GPIO_GPSET0     *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="code" href="gpio_8h.html#a6b64e894305a43aa29bd86da0ef71a42">   47</a></span>&#160;<span class="preprocessor">#define NUMBER_GPIO                 17</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="code" href="gpio_8h.html#a35aef2f894cc5896f369c190943bbe5d">   51</a></span>&#160;<span class="preprocessor">#define RESISTOR_SLEEP_US           1</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="code" href="gpio_8h.html#a019a6e4076f8d5c7f668316deabc4ed6">   53</a></span>&#160;<span class="preprocessor">#define GPIO_GPCLR0     *(gGpioMap + GPCLR0_OFFSET / sizeof(uint32_t))</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="code" href="gpio_8h.html#a30df19d8595ce728981094ccb5b7bc91">   55</a></span>&#160;<span class="preprocessor">#define GPIO_GPLEV0     *(gGpioMap + GPLEV0_OFFSET / sizeof(uint32_t))</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="code" href="gpio_8h.html#a1d4fa2ba2e68b3a1d91743967edc6025">   57</a></span>&#160;<span class="preprocessor">#define GPIO_GPPUD      *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t))</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="code" href="gpio_8h.html#aa52c7d29ccbd8f4366c221be1ea93813">   59</a></span>&#160;<span class="preprocessor">#define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="gpio_8h.html#a03fcac259fa7dfb1b3075c2466138aeb">   54</a></span>&#160;<span class="preprocessor">#define GPIO_GPSET0     *(gGpioMap + GPSET0_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="code" href="gpio_8h.html#a019a6e4076f8d5c7f668316deabc4ed6">   56</a></span>&#160;<span class="preprocessor">#define GPIO_GPCLR0     *(gGpioMap + GPCLR0_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="code" href="gpio_8h.html#a30df19d8595ce728981094ccb5b7bc91">   58</a></span>&#160;<span class="preprocessor">#define GPIO_GPLEV0     *(gGpioMap + GPLEV0_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="code" href="gpio_8h.html#a1d4fa2ba2e68b3a1d91743967edc6025">   60</a></span>&#160;<span class="preprocessor">#define GPIO_GPPUD      *(gGpioMap + GPPUD_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="code" href="gpio_8h.html#aa52c7d29ccbd8f4366c221be1ea93813">   62</a></span>&#160;<span class="preprocessor">#define GPIO_GPPUDCLK0  *(gGpioMap + GPPUDCLK0_OFFSET / sizeof(uint32_t))</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/*_GPIO_H_*/</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jul 8 2013 21:39:30 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 11 2013 19:56:44 for Raspberry Pi GPIO Library by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.3.1
 </small></address>

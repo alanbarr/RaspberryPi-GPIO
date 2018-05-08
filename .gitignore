@@ -5,4 +5,4 @@
 *.exe
 
 gh-pages
-documentation/html
+documentation/output
